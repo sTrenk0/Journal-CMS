@@ -9,11 +9,11 @@ from fastapi.testclient import TestClient
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from app.auth.hash import Hasher
-from app.settings import postgres_url_test
-from app.database.models import User
+from backend.app.auth.hash import Hasher
+from backend.app.settings import postgres_url_test
+from backend.app.database.models import User
 from backend.app.main import app
-from app.database.dal import UserDAL
+from backend.app.database.dal import UserDAL
 from logging import Logger
 
 engine = create_async_engine(postgres_url_test)

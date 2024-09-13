@@ -1,13 +1,13 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.database.models import User
-from app.auth.deps import get_current_active_user, get_current_active_superuser
-from app.schemas import ResponseUser, CreateUser, UpdateUser
-from app.database.dal import UserDAL
-from app.auth.hash import Hasher
-from app.errors import ErrorCode
-from app.openapi_responses import (
+from backend.app.database.models import User
+from backend.app.auth.deps import get_current_active_user, get_current_active_superuser
+from backend.app.schemas import ResponseUser, CreateUser, UpdateUser
+from backend.app.database.dal import UserDAL
+from backend.app.auth.hash import Hasher
+from backend.app.errors import ErrorCode
+from backend.app.openapi_responses import (
     REGISTER_USER_ALREADY_EXISTS_RESPONSE,
     FORBIDDEN_RESPONSE,
     USER_NOT_FOUND_RESPONSE,

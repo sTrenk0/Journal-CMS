@@ -1,11 +1,8 @@
 import pytest
-from app.auth.transport import CookieTransport
+from backend.app.test.conftest import test_user_source_password, test_user_data
+from backend.app.auth.transport import CookieTransport
 from fastapi import status
-from app.test.conftest import test_user_source_password, test_user_data
-from app.auth.transport import CookieTransport
-from fastapi import status
-from app.test.conftest import test_user_source_password, test_user_data
-from app.auth.auntification import create_access_token, verify_access_token
+from backend.app.test.conftest import test_user_source_password, test_user_data
 
 
 async def test_successful_login(app_client, created_example_user):
