@@ -1,0 +1,103 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.textBlock {
+  background-color: #fdf7e1;
+  background-image: url("../../assets/salute.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.textBlock {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  padding: 2rem; /* Add padding around the text block */
+}
+
+.textHold {
+  min-height: 100vh; /* Ensure the text block covers the full viewport height */
+  background-color: #fdf7e1; /* Background color for the text block */
+  padding: 2rem; /* Padding inside the text block */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+  line-height: 1.75; /* Adjust line height for better readability */
+  background-image: url("../../assets/texture.JPG");
+  background-size: cover;
+
+  background-blend-mode: multiply;
+  width: 80%; /* Default width for small screens */
+  background-attachment: scroll;
+}
+
+/* Media query for medium screens (tablets, etc.) */
+@media (min-width: 640px) {
+  .textHold {
+    width: 60%;
+  }
+}
+
+/* Media query for large screens (desktops) */
+@media (min-width: 1024px) {
+  .textHold {
+    width: 40%;
+  }
+}
+
+/* Media query for extra-large screens (large desktops, 4K monitors) */
+@media (min-width: 1280px) {
+  .textHold {
+    width: 30%;
+  }
+}
+
+.textHold p {
+  margin-bottom: 1.5rem; /* Adjust the space between paragraphs as needed */
+}
+
+@media (min-width: 640px) {
+  .textHold p {
+    margin-bottom: 2rem; /* Increase space for larger screens */
+  }
+}
+
+@media (min-width: 1024px) {
+  .textHold p {
+    margin-bottom: 2.5rem; /* Further increase space for large screens */
+  }
+}
+
+a {
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: white;
+  transition: width 0.3s ease-in-out;
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+/* a:hover {
+  color: white;
+} */
+
+a:hover .ml-2 {
+  transform: translateX(5px);
+  transition: transform 0.3s ease-in-out;
+}

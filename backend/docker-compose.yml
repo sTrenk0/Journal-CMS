@@ -1,0 +1,20 @@
+services:
+  postgres:
+    container_name: postgres
+    restart: always
+    image: postgres:16
+    environment:
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_production
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+volumes:
+  postgres_data:

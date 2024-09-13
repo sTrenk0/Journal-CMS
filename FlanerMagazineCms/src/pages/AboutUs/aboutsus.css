@@ -1,0 +1,8 @@
+a:hover {
+  color: black;
+}
+.contenConteiner {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: 0;
+}

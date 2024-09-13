@@ -1,0 +1,11 @@
+fastapi[standard]
+passlib
+sqlalchemy
+pydantic[email]
+asyncpg
+python-jose
+alembic
+black
+pytest
+httpx
+bcrypt
