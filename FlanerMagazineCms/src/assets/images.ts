@@ -10,6 +10,7 @@ const IMAGES = {
   horizontal_placeholder: new URL("./image-placeholder.svg", import.meta.url)
     .href,
   author_photo: new URL("./author_photo.svg", import.meta.url).href,
+  reactangle_placeholder: new URL("./Rectangle-placeholder.png", import.meta.url)
 };
 
 export default IMAGES;

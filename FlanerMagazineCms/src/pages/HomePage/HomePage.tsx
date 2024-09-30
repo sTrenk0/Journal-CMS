@@ -18,7 +18,7 @@ function HomePage() {
               className="HeaderElement px-20 p-5"
               style={{ backgroundColor: "#8AA3B6" }}
             >
-              <Link to="/">Читати</Link>
+              <Link to="/allposts">Читати</Link>
             </div>
             <div
               className="HeaderElement px-20 p-5"

@@ -8,6 +8,7 @@ import AboutUs from "./pages/AboutUs/AboutUs";
 import Merch from "./pages/Merch/Merch";
 import Contribute from "./pages/Contribute/Contribute";
 import Contact from "./pages/Contact/Contact";
+import AllPosts from "./pages/AllPosts/AllPosts.tsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="merchandise" element={<Merch />} />
           <Route path="contribute" element={<Contribute />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="allposts" element={<AllPosts/>} />
         </Routes>
       </BrowserRouter>
     </>
