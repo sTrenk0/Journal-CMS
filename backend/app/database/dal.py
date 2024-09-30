@@ -5,10 +5,10 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Self
 from app.database.models import User
 from app.database.core import get_async_session
 
+from typing_extensions import Self
 
 class UserDAL:
     """Data Access Layer for operating user info"""

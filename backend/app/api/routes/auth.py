@@ -3,15 +3,15 @@ from uuid import UUID
 from fastapi import APIRouter, status, Depends, Form, HTTPException, Path
 from pydantic import EmailStr
 
-from backend.app.auth.hash import Hasher
-from backend.app.openapi_responses import LOGIN_BAD_CREDENTIAL_RESPONSE, UNAUTHORIZED_RESPONSE, NOT_VERIFY_EMAIl_RESPONSE
+from app.auth.hash import Hasher
+from app.openapi_responses import LOGIN_BAD_CREDENTIAL_RESPONSE, UNAUTHORIZED_RESPONSE, NOT_VERIFY_EMAIl_RESPONSE
 from typing import Annotated
-from backend.app.auth.auntification import authenticate_user, create_access_token
-from backend.app.auth.transport import CookieTransport
-from backend.app.errors import ErrorCode
-from backend.app.auth.deps import get_current_active_user
-from backend.app.database.dal import UserDAL
-from backend.app.email_utils import generate_verify_by_code_email, send_email
+from app.auth.auntification import authenticate_user, create_access_token
+from app.auth.transport import CookieTransport
+from app.errors import ErrorCode
+from app.auth.deps import get_current_active_user
+from app.database.dal import UserDAL
+from app.email_utils import generate_verify_by_code_email, send_email
 
 from secrets import randbelow
 

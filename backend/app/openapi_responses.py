@@ -1,6 +1,6 @@
 from fastapi import status
 
-from backend.app.errors import ErrorModel, ErrorCode
+from app.errors import ErrorModel, ErrorCode
 from typing import Any, Dict, Union
 
 OpenAPIResponseType = Dict[Union[int, str], Dict[str, Any]]

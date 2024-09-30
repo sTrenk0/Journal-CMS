@@ -3,9 +3,9 @@ from typing import Union, Optional
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.app.auth.hash import Hasher
-from backend.app.database.dal import UserDAL
-from backend.app.database.models import User
+from app.auth.hash import Hasher
+from app.database.dal import UserDAL
+from app.database.models import User
 from .transport import COOKIE_MAX_AGE
 from secrets import token_urlsafe
 from jose import jwt, JWTError

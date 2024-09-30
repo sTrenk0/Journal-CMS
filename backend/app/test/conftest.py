@@ -9,11 +9,11 @@ from fastapi.testclient import TestClient
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from backend.app.auth.hash import Hasher
-from backend.app.settings import postgres_url_test
-from backend.app.database.models import User
-from backend.app.main import app
-from backend.app.database.dal import UserDAL
+from app.auth.hash import Hasher
+from app.settings import postgres_url_test
+from app.database.models import User
+from app.main import fastapiapp
+from app.database.dal import UserDAL
 from logging import Logger
 
 engine = create_async_engine(postgres_url_test)
@@ -69,10 +69,10 @@ async def user_dal_override(async_test_session) -> UserDAL:
 
 @pytest.fixture(scope="session")
 async def app_client(user_dal_override) -> Generator[TestClient, Any, None]:
-    app.dependency_overrides[UserDAL.get_as_dependency] = user_dal_override
-    async with TestClient(app) as client:
+    fastapiapp.dependency_overrides[UserDAL.get_as_dependency] = user_dal_override
+    async with TestClient(fastapiapp) as client:
         yield client
-    app.dependency_overrides.clear()
+    fastapiapp.dependency_overrides.clear()
 
 
 @pytest.fixture(scope="function")
