@@ -1,6 +1,6 @@
 from fastapi import status
 
-from app.errors import ErrorModel, ErrorCode
+from .errors import ErrorModel, ErrorCode
 from typing import Any, Dict, Union
 
 OpenAPIResponseType = Dict[Union[int, str], Dict[str, Any]]
@@ -83,6 +83,63 @@ NOT_VERIFY_EMAIl_RESPONSE: OpenAPIResponseType = {
             "application/json": {
                 "example": {
                     "detail": ErrorCode.NOT_VERIFY_EMAIl
+                }
+            }
+        }
+    }
+}
+
+PRODUCT_NOT_FOUND_RESPONSE: OpenAPIResponseType = {
+    status.HTTP_404_NOT_FOUND: {
+        "description": "Product not found.",
+        "model": ErrorModel,
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": ErrorCode.PRODUCT_NOT_FOUND
+                }
+            }
+        }
+    }
+}
+
+PRODUCT_WITH_THIS_NAME_ALREADY_EXISTS_RESPONSE: OpenAPIResponseType = {
+    status.HTTP_400_BAD_REQUEST: {
+        "description": "Product with this name already exists.",
+        "model": ErrorModel,
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": ErrorCode.PRODUCT_WITH_THIS_NAME_ALREADY_EXISTS
+                }
+            }
+        }
+    }
+}
+
+PRODUCT_WITH_THIS_SOURCE_PRODUCT_URL_ALREADY_EXISTS_RESPONSE: OpenAPIResponseType = {
+    status.HTTP_400_BAD_REQUEST: {
+        "description": "Product with this source product url already exists.",
+        "model": ErrorModel,
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": ErrorCode.PRODUCT_WITH_THIS_SOURCE_PRODUCT_URL_ALREADY_EXISTS
+                }
+            }
+        }
+    }
+}
+
+
+USER_WITH_THIS_EMAIL_ALREADY_EXISTS_RESPONSE: OpenAPIResponseType = {
+    status.HTTP_400_BAD_REQUEST: {
+        "description": "User with this email already exists.",
+        "model": ErrorModel,
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": ErrorCode.USER_WITH_THIS_EMAIL_ALREADY_EXISTS
                 }
             }
         }

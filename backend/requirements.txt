@@ -7,5 +7,8 @@ python-jose
 alembic
 black
 pytest
-httpx
 bcrypt
+uvicorn
+psycopg2-binary
+pydantic_settings
+pytest-mock

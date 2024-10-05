@@ -5,7 +5,10 @@ import smtplib
 import logging
 from jinja2 import Template
 from pathlib import Path
+from .settings import config
 
+
+# TODO: move to settings
 SMPTP_HOST = "smtp.gmail.com"
 SMPTP_PORT = 465
 SMTPT_CLIENT_URL = f"{SMPTP_HOST}:{SMPTP_PORT}"

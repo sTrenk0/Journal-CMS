@@ -1,6 +1,7 @@
+import random
 from uuid import UUID
 
-from fastapi import APIRouter, status, Depends, Form, HTTPException, Path
+from fastapi import APIRouter, status, Depends, Form, HTTPException, Query, BackgroundTasks
 from pydantic import EmailStr
 
 from app.auth.hash import Hasher
@@ -12,8 +13,6 @@ from app.errors import ErrorCode
 from app.auth.deps import get_current_active_user
 from app.database.dal import UserDAL
 from app.email_utils import generate_verify_by_code_email, send_email
-
-from secrets import randbelow
 
 auth_router = APIRouter()
 
@@ -29,9 +28,10 @@ STORAGE_ID_AND_RECOVERY_PASSWORD_CODE: dict[int, UUID] = {}
 async def login(
         email: Annotated[EmailStr, Form()],
         password: Annotated[str, Form()],
-        transport: CookieTransport = Depends()
+        transport: Annotated[CookieTransport, Depends()],
+        user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]
 ):
-    user = await authenticate_user(email, password)
+    user = await authenticate_user(email, password, user_dal=user_dal)
     if not user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=ErrorCode.LOGIN_BAD_CREDENTIALS)
 
@@ -48,36 +48,42 @@ async def login(
         **CookieTransport.get_openapi_logout_responses_success()
     }
 )
-async def logout(transport: CookieTransport = Depends()):
+async def logout(transport: Annotated[CookieTransport, Depends()]):
     response = transport.get_logout_response()
     return response
 
 
-@auth_router.get("/forgot-password", status_code=status.HTTP_202_ACCEPTED, response_model=None)
-async def request_forgot_password(email: Annotated[EmailStr, Path()], user_dal: UserDAL = Depends(UserDAL.get_as_dependency)):
+@auth_router.post("/forgot-password", status_code=status.HTTP_202_ACCEPTED, response_model=None)
+async def request_forgot_password(
+        email: Annotated[EmailStr, Query()],
+        background_tasks: BackgroundTasks,
+        user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)],
+):
     user = await user_dal.get_user_by_email(email)
     if user:
-        code = randbelow(10000)
+        code = random.randint(1000, 9999)
         global STORAGE_ID_AND_RECOVERY_PASSWORD_CODE
         STORAGE_ID_AND_RECOVERY_PASSWORD_CODE[code] = user.id
         verify_email_code_template = generate_verify_by_code_email(email, code)
-        send_email(verify_email_code_template, email)
+        background_tasks.add_task(send_email, msg=verify_email_code_template, email_to=email)
         return
 
     return
 
 
-@auth_router.get("/recovery-password", status_code=status.HTTP_204_NO_CONTENT, responses=NOT_VERIFY_EMAIl_RESPONSE)
+@auth_router.post(
+    "/recovery-password", status_code=status.HTTP_204_NO_CONTENT, response_model=None,
+    responses=NOT_VERIFY_EMAIl_RESPONSE
+)
 async def recovery_password(
+        new_password: Annotated[str, Form(alias="new-password")],
         code: Annotated[int, Form()],
-        new_password: Annotated[str, Form()],
-        user_dal: UserDAL = Depends(UserDAL.get_as_dependency)) -> None:
+        user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]) -> None:
     user_id = STORAGE_ID_AND_RECOVERY_PASSWORD_CODE.pop(code, None)
     if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ErrorCode.NOT_VERIFY_EMAIl
         )
-
     await user_dal.update_user(user_id, hashed_password=Hasher.get_password_hash(new_password))
     return None

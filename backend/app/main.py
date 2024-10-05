@@ -1,15 +1,28 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from app.api.core import router
 
-fastapiapp = FastAPI()
-fastapiapp.include_router(router)
+from .api.core import router
+from .database.initial import create_initial_superuser
 
 
-@fastapiapp.get("/")
+@asynccontextmanager
+async def lifespan(app):
+    await create_initial_superuser()
+    yield
+
+
+fastapi_app = FastAPI(lifespan=lifespan)
+fastapi_app.include_router(router)
+
+
+@fastapi_app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 
+# use this in case when you want run app directly without docker
 # if __name__ == "__main__":
 #     import uvicorn
-#     # uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+#     from .settings import config
+#     uvicorn.run("app.main:fastapi_app", host=config.app_host, port=config.app_port, reload=True)

@@ -4,18 +4,22 @@ from .transport import COOKIE_NAME
 from app.database.models import User
 from app.database.dal import UserDAL
 from .auntification import verify_access_token
+from base64 import b64decode
+from typing import Annotated
 
 
-async def get_current_active_user(
-        token: str = Cookie(alias=COOKIE_NAME),
-        user_dal: UserDAL = Depends(UserDAL.get_as_dependency)
-) -> User:
+async def authorize_user(token: str, user_dal: UserDAL, superuser: bool = False) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail=ErrorCode.UNAUTHORIZED,
     )
 
-    decoded_payload_from_token = verify_access_token(token)
+    forbidden_exception = HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail=ErrorCode.FORBIDDEN,
+    )
+
+    decoded_payload_from_token = verify_access_token(b64decode(token).decode("utf-8"))
     if decoded_payload_from_token is None:
         raise credentials_exception
 
@@ -24,17 +28,40 @@ async def get_current_active_user(
         raise credentials_exception
 
     if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=ErrorCode.FORBIDDEN,
-        )
+        raise forbidden_exception
+
+    if superuser:
+        if not user.is_superuser:
+            raise forbidden_exception
 
     return user
 
 
-async def get_current_active_superuser(current_user: User = Depends(get_current_active_user)):
-    if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=ErrorCode.FORBIDDEN,
-        )
+async def get_current_active_user(
+        token: Annotated[str, Cookie(alias=COOKIE_NAME)],
+        user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]
+) -> User:
+    """
+    Get current active user.
+    :param token: token from cookies
+    :param user_dal: UserDAL
+
+    :return: User model
+    :raise: HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
+    """
+    return await authorize_user(token, user_dal, superuser=False)
+
+
+async def get_current_active_superuser(
+        token: Annotated[str, Cookie(alias=COOKIE_NAME)],
+        user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]
+) -> User:
+    """
+    Get current active superuser.
+    :param token: token from cookies
+    :param user_dal: UserDAL
+
+    :return: User model
+    :raise: HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
+    """
+    return await authorize_user(token, user_dal, superuser=True)

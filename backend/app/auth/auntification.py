@@ -1,20 +1,19 @@
 from datetime import timedelta, datetime, timezone
 from typing import Union, Optional
 
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.auth.hash import Hasher
+
+from .hash import Hasher
 from app.database.dal import UserDAL
 from app.database.models import User
 from .transport import COOKIE_MAX_AGE
-from secrets import token_urlsafe
 from jose import jwt, JWTError
 
-SECRET = token_urlsafe(32)
+
+SECRET = "some_jwt_secret"
 
 
 async def authenticate_user(
-        email: str, password: str, user_dal: UserDAL = Depends(UserDAL.get_as_dependency)
+        email: str, password: str, user_dal: UserDAL
 ) -> Union[User, None]:
     user = await user_dal.get_user_by_email(email=email)
     if user is None:
@@ -28,7 +27,7 @@ async def authenticate_user(
 
 def create_access_token(email: str, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = {"sub": email}
-    if expires_delta:
+    if expires_delta is not None:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(seconds=COOKIE_MAX_AGE)
