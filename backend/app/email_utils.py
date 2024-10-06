@@ -8,12 +8,12 @@ from pathlib import Path
 from .settings import config
 
 
-# TODO: move to settings
+
 SMPTP_HOST = "smtp.gmail.com"
 SMPTP_PORT = 465
 SMTPT_CLIENT_URL = f"{SMPTP_HOST}:{SMPTP_PORT}"
-SENDER_EMAIL = "rokhmakov.artem@gmail.com"
-CLIENT_PASSWORD = "rwuq uari ujox vzvb"
+SENDER_EMAIL = config.app_sender_email
+CLIENT_PASSWORD = config.app_client_password
 TEMPLATES_DIR: Path = Path(__file__).parent.parent / "email-templates"
 
 

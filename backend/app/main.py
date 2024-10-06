@@ -25,4 +25,4 @@ async def root():
 # if __name__ == "__main__":
 #     import uvicorn
 #     from .settings import config
-#     uvicorn.run("app.main:fastapi_app", host=config.app_host, port=config.app_port, reload=True)
+#     uvicorn.run("app.main:fastapi_app", host="0.0.0.0", port=config.app_port, reload=True)

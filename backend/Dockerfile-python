@@ -12,4 +12,4 @@ RUN pip install --no-cache-dir --upgrade pip\
 
 COPY . /backend
 #TODO: gunicorn launch app
-CMD ["bash", "-c", "alembic upgrade head && uvicorn app.main:fastapi_app --host ${APP_HOST} --port ${APP_PORT} --reload"]
+CMD ["bash", "-c", "alembic upgrade head && uvicorn app.main:fastapi_app --host 0.0.0.0 --port ${APP_PORT} --reload"]

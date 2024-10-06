@@ -9,13 +9,14 @@ class _Config(BaseSettings):
         extra="ignore",
         case_sensitive=False,
         env_file=".app.env",
+        env_nested_delimiter="\n",
+        env_file_encoding="utf-8",
     )
 
     app_initial_superuser_email: str
     app_initial_superuser_password: str
     app_sender_email: str
     app_client_password: str
-    app_host: str
     app_port: int
     postgres_port: int
     postgres_user: str
