@@ -1,45 +1,20 @@
 import "./homepage.css";
 import { Outlet, Link } from "react-router-dom";
 import IMAGES from "../../assets/images";
+import { useIsMobile } from "../../helpers/useIsMobile";
+import DesktopHeader from "../../components/DesktopHeader";
+import MobileHeader from "../../components/MobileHeader";
 
 function HomePage() {
+  const isMobile = useIsMobile();
+
   return (
     <>
-      <div className="MainPage font-palatino">
-        <div className="header-container flex justify-center  ">
-          <div className={`header`}>
-            <div
-              className="HeaderElement px-20 p-5"
-              style={{ backgroundColor: "#4A8D5C" }}
-            >
-              <Link to="/about">Про нас</Link>
-            </div>
-            <div
-              className="HeaderElement px-20 p-5"
-              style={{ backgroundColor: "#8AA3B6" }}
-            >
-              <Link to="/allposts">Читати</Link>
-            </div>
-            <div
-              className="HeaderElement px-20 p-5"
-              style={{ backgroundColor: "#8E3A21" }}
-            >
-              <Link to="/merchandise">Мерч</Link>
-            </div>
-            <div
-              className="HeaderElement px-20 p-5"
-              style={{ backgroundColor: "#CAA150" }}
-            >
-              <Link to="/contribute">Як долучитися</Link>
-            </div>
-            <div
-              className="HeaderElement px-20 p-5"
-              style={{ backgroundColor: "#8E8E8E" }}
-            >
-              <Link to="/contact">Контакти</Link>
-            </div>
-          </div>
-        </div>
+      <div>
+        {isMobile ? <MobileHeader /> : <DesktopHeader />}
+
+        {/* header adapt */}
+
         <div className="logo flex justify-center mt-28">
           <img src={IMAGES.logo_big} alt="logo" className="GemLogo" />
         </div>
@@ -55,11 +30,10 @@ function HomePage() {
         <div>
           <div className="flex justify-center mt-16">
             <div className="mt-7 bg-black p-5 px-20 rounded-[84px] ">
-              <a href="#" className="flex items-center">
-                <Link to="/home">
-                  <p className="BrButton">Новий випуск</p>{" "}
-                </Link>
-              </a>
+              <Link to="/post">
+                <p className="BrButton">Новий випуск</p>{" "}
+              </Link>
+              ={" "}
             </div>
           </div>
         </div>

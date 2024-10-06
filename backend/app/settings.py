@@ -30,4 +30,4 @@ class _Config(BaseSettings):
         return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host_name}:{self.postgres_port}/{self.postgres_db}"
 
 
-config = _Config(_env_file="../.app.env")
+config = _Config(_env_file="D:/react_projects/Journal-CMS/backend/.app.env")

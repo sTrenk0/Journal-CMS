@@ -1,8 +1,9 @@
 import "./contribute.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdOutlineArrowBack } from "react-icons/md";
 import IMAGES from "../../assets/images";
 import { Outlet, Link } from "react-router-dom";
+import { useIsMobile } from "../../helpers/useIsMobile";
 
 const Contribute = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
@@ -11,6 +12,15 @@ const Contribute = () => {
     setSidebarOpen((prevState) => !prevState);
   };
 
+  //*screensize check
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [isMobile]);
+
   return (
     <div className="flex overflow-hidden h-screen">
       <aside
@@ -18,20 +28,20 @@ const Contribute = () => {
           sidebarOpen ? "" : "-ml-64"
         }`}
       >
-        <nav className="flex-1 flex flex-col p-5 text-lg font-medium" style={{backgroundColor: "#FDF7E1"}}>
-          <Link to="/" className="p-2 flex items-center">
+        <nav className="flex-1 flex flex-col p-5 text-lg font-medium">
+          <Link to="/allposts" className="p-2 flex items-center">
             <img src={IMAGES.lightgrey} alt="grey" className="mr-2" />
             Читати
           </Link>
-          <Link to="/" className="p-2 flex items-center">
+          <Link to="/merchandise" className="p-2 flex items-center">
             <img src={IMAGES.red} alt="grey" className="mr-2" />
             Мерч
           </Link>
-          <Link to="/" className="p-2 flex items-center">
+          <Link to="/contribute" className="p-2 flex items-center">
             <img src={IMAGES.yellow} alt="grey" className="mr-2" />
             Як долучитися
           </Link>
-          <Link to="/" className="p-2 flex items-center">
+          <Link to="/contact" className="p-2 flex items-center">
             <img src={IMAGES.grey} alt="grey" className="mr-2" />
             Контакти
           </Link>
@@ -41,11 +51,11 @@ const Contribute = () => {
           </Link>
         </nav>
       </aside>
-      <div className="flex-1 flex flex-col" >
+      <div className="flex-1 flex flex-col">
         {/* Adjust header to align logo and burger icon */}
         <header
           className="flex items-center p-4 font-semibold text-black border-b border-black sticky top-0 z-10"
-          style={{backgroundColor: "#FDF7E1"}}
+          style={{ backgroundColor: "#FDF7E1" }}
         >
           <button className="p-1 mr-4" onClick={toggleSidebar}>
             <svg
