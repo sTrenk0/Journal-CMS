@@ -1,8 +1,9 @@
 import "./aboutsus.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdOutlineArrowBack } from "react-icons/md";
 import IMAGES from "../../assets/images";
 import { Outlet, Link } from "react-router-dom";
+import { useIsMobile } from "../../helpers/useIsMobile";
 
 const AboutUs = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
@@ -10,6 +11,15 @@ const AboutUs = () => {
   const toggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
   };
+
+  //*screensize check
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [isMobile]);
 
   return (
     <div className="flex overflow-hidden h-screen">
@@ -19,19 +29,19 @@ const AboutUs = () => {
         }`}
       >
         <nav className="flex-1 flex flex-col p-5 text-lg font-medium">
-          <Link to="/" className="p-2 flex items-center">
+          <Link to="/allposts" className="p-2 flex items-center">
             <img src={IMAGES.lightgrey} alt="grey" className="mr-2" />
             Читати
           </Link>
-          <Link to="/" className="p-2 flex items-center">
+          <Link to="/merchandise" className="p-2 flex items-center">
             <img src={IMAGES.red} alt="grey" className="mr-2" />
             Мерч
           </Link>
-          <Link to="/" className="p-2 flex items-center">
+          <Link to="/contribute" className="p-2 flex items-center">
             <img src={IMAGES.yellow} alt="grey" className="mr-2" />
             Як долучитися
           </Link>
-          <Link to="/" className="p-2 flex items-center">
+          <Link to="/contact" className="p-2 flex items-center">
             <img src={IMAGES.grey} alt="grey" className="mr-2" />
             Контакти
           </Link>

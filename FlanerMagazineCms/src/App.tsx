@@ -9,6 +9,7 @@ import Merch from "./pages/Merch/Merch";
 import Contribute from "./pages/Contribute/Contribute";
 import Contact from "./pages/Contact/Contact";
 import AllPosts from "./pages/AllPosts/AllPosts.tsx";
+import Post from "./pages/Post/Post.tsx";
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
           <Route path="merchandise" element={<Merch />} />
           <Route path="contribute" element={<Contribute />} />
           <Route path="contact" element={<Contact />} />
-          <Route path="allposts" element={<AllPosts/>} />
+          <Route path="allposts" element={<AllPosts />} />
+          <Route path="post" element={<Post />} />
         </Routes>
       </BrowserRouter>
     </>

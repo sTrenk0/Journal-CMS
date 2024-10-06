@@ -1,21 +1,21 @@
 a:hover {
-    color: black;
+  color: black;
 }
 .contenConteiner {
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: 0;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: 0;
 }
 
-.title_img{
-    width: 260px;
-    height: 350px;
+.title_img {
+  width: 260px;
+  height: 350px;
 }
 
-.image_container{
-    box-shadow: 0 0 150px #ABBCC2;
-    /*border: 1px solid #000;*/
+.image_container {
+  box-shadow: 0 0 150px #abbcc2;
+  /*border: 1px solid #000;*/
 }
-.article{
-    margin-top: 87px;
+.article {
+  margin-top: 87px;
 }
