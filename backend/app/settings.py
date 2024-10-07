@@ -1,7 +1,7 @@
 from typing import Union, Literal
 from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+import pathlib
 
 class _Config(BaseSettings):
     model_config = SettingsConfigDict(
@@ -30,4 +30,5 @@ class _Config(BaseSettings):
         return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host_name}:{self.postgres_port}/{self.postgres_db}"
 
 
-config = _Config(_env_file="D:/react_projects/Journal-CMS/backend/.app.env")
+_env_file = pathlib.Path(__file__).parent.parent.joinpath(".app.env").absolute()
+config = _Config(_env_file=_env_file)
