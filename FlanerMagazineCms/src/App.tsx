@@ -10,6 +10,9 @@ import Contribute from "./pages/Contribute/Contribute";
 import Contact from "./pages/Contact/Contact";
 import AllPosts from "./pages/AllPosts/AllPosts.tsx";
 import Post from "./pages/Post/Post.tsx";
+import NotFound from "./pages/NotFound/404.tsx";
+import LoginForm from "./components/Login/Login.tsx";
+import Dashboard from "./pages/Protected/Dashboard/Dashboard.tsx";
 
 function App() {
   return (
@@ -23,7 +26,10 @@ function App() {
           <Route path="contribute" element={<Contribute />} />
           <Route path="contact" element={<Contact />} />
           <Route path="allposts" element={<AllPosts />} />
-          <Route path="post" element={<Post />} />
+          <Route path="post/:id" element={<Post />} />
+          <Route path="404" element={<NotFound />} />
+          <Route path="panel/admin/login" element={<LoginForm />} />
+          <Route path="panel/admin/" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
     </>

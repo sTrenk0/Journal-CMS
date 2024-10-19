@@ -8,25 +8,25 @@ function MobileHeader() {
         {/* Menu Links (Stay in one line) */}
         <ul className="flex space-x-6 items-center text-gray-800 mb-3 text-base font-bold">
           <li>
-            <Link to="#home" className="hover:text-gray-600">
+            <Link to="/allposts" className="hover:text-gray-600">
               <img src={IMAGES.lightgrey} alt="grey" className="mr-1 w-3 h-3" />
               Читати
             </Link>
           </li>
           <li>
-            <Link to="#about" className="hover:text-gray-600">
+            <Link to="/contribute" className="hover:text-gray-600">
               <img src={IMAGES.yellow} alt="grey" className="mr-1 w-3 h-3" />
               Долучитися
             </Link>
           </li>
           <li>
-            <Link to="#services" className="hover:text-gray-600">
+            <Link to="/merchandise" className="hover:text-gray-600">
               <img src={IMAGES.red} alt="grey" className="mr-1 w-3 h-3" />
               Мерч
             </Link>
           </li>
           <li>
-            <Link to="#contact" className="hover:text-gray-600">
+            <Link to="/contact" className="hover:text-gray-600">
               <img src={IMAGES.grey} alt="grey" className="mr-1 w-3 h-3" />
               Контакти
             </Link>

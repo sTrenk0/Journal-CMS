@@ -4,9 +4,53 @@ import IMAGES from "../../assets/images.ts";
 import { MdOutlineArrowBack } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { useIsMobile } from "../../helpers/useIsMobile.ts";
+import axios from "axios";
 
 function AllPosts() {
+  interface PreviewUrls {
+    id: string;
+    name: string;
+    source_product_url: string;
+    preview_urls: string[];
+    is_active: boolean;
+    description: string;
+    price: number;
+    created_at: string;
+    updated_at: string;
+  }
+
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+
+  const [data, setData] = useState<PreviewUrls[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Fetching data from API using axios
+    axios
+      .get<PreviewUrls[]>("http://localhost:8000/api/products")
+      .then((response) => {
+        setData(response.data); // Store API data in state
+        setLoading(false); // Stop loading
+      })
+      .catch((error) => {
+        setError("Failed to fetch data"); // Handle error
+        console.log(error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    // return <div>Loading...</div>;
+    console.log("loading");
+  }
+
+  if (error) {
+    console.log(error);
+    // return <div>{error}</div>;
+  }
+
+  console.log(data);
 
   const toggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
@@ -86,66 +130,25 @@ function AllPosts() {
             </div>
             <div className="mainContent pr-4 lg:pr-20 xl:pr-32 mt-10">
               <div className="articles flex justify-center items-center text-center flex-col">
-                <div className="mt-8 flex">
-                  <div className="image image_container">
-                    <img
-                      className="title_img"
-                      src={IMAGES.reactangle_placeholder.toString()}
-                      alt="reactangle_placeholder"
-                    />
+                {data.map((item) => (
+                  <div className="mt-8 flex">
+                    <div className="image image_container">
+                      <Link to={"/post/" + item.id}>
+                        <img
+                          className="title_img"
+                          src={item.preview_urls[0]}
+                          alt="reactangle_placeholder"
+                        />
+                      </Link>
+                    </div>
+                    <div
+                      className="desktext text-center not-italic font-extrabold text-4xl leading-[43px] ml-6"
+                      style={{ writingMode: "vertical-lr" }}
+                    >
+                      {item.name}
+                    </div>
                   </div>
-                  <div
-                    className="desktext text-center not-italic font-extrabold text-4xl leading-[43px] ml-6"
-                    style={{ writingMode: "vertical-lr" }}
-                  >
-                    Вересень 2024
-                  </div>
-                </div>
-                <div className="article flex">
-                  <div className="image image_container">
-                    <img
-                      className="title_img"
-                      src={IMAGES.reactangle_placeholder.toString()}
-                      alt="reactangle_placeholder"
-                    />
-                  </div>
-                  <div
-                    className="desktext text-center not-italic font-extrabold text-4xl leading-[43px] ml-6"
-                    style={{ writingMode: "vertical-lr" }}
-                  >
-                    Вересень 2024
-                  </div>
-                </div>
-                <div className="article flex">
-                  <div className="image image_container">
-                    <img
-                      className="title_img"
-                      src={IMAGES.reactangle_placeholder.toString()}
-                      alt="reactangle_placeholder"
-                    />
-                  </div>
-                  <div
-                    className="desktext text-center not-italic font-extrabold text-4xl leading-[43px] ml-6"
-                    style={{ writingMode: "vertical-lr" }}
-                  >
-                    Вересень 2024
-                  </div>
-                </div>
-                <div className="article flex">
-                  <div className="image image_container">
-                    <img
-                      className="title_img"
-                      src={IMAGES.reactangle_placeholder.toString()}
-                      alt="reactangle_placeholder"
-                    />
-                  </div>
-                  <div
-                    className="desktext text-center not-italic font-extrabold text-4xl leading-[43px] ml-6"
-                    style={{ writingMode: "vertical-lr" }}
-                  >
-                    Вересень 2024
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </main>
