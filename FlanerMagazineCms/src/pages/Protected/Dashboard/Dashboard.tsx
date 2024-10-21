@@ -6,11 +6,16 @@ import {
   Users,
   Link as IconLink,
   CreditCard,
+  KeyRound,
 } from "lucide-react";
 import Sidebar, { SidebarItem } from "./components/Sidebar";
 import Navbar from "./components/Navbar";
-import { useState } from "react"; // Import useState
+import { useState, useEffect } from "react"; // Import useState
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Example components for different tabs
 const PostsComponent = () => <div>Posts Content</div>;
@@ -21,6 +26,37 @@ const ViewWebsiteComponent = () => <div>View Website Content</div>;
 const PaymentHistoryComponent = () => <div>Payment History Content</div>;
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+
+  const checkAuthorization = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/admin/users/me",
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      // Redirect based on error
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 422) {
+          navigate("/panel/admin/login/");
+        } else if (error.response && error.response.status === 401) {
+          navigate("/panel/admin/login/");
+        } else {
+          console.log(error);
+          toast.error("Unknown error, check console");
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkAuthorization();
+  }, []);
+
   // State to track which tab is selected
   const [selectedTab, setSelectedTab] = useState<string>("posts");
 
@@ -86,6 +122,12 @@ const Dashboard: React.FC = () => {
             active={selectedTab === "paymentHistory"}
             onClick={() => setSelectedTab("paymentHistory")}
           />
+          <SidebarItem
+            icon={<KeyRound size={20} />}
+            text="Password Recovery"
+            active={selectedTab === "PasswordRecovery"}
+            onClick={() => setSelectedTab("PasswordRecovery")}
+          />
           <hr className="my-3" />
 
           <Link to={"https://t.me/classssick"}>
@@ -100,6 +142,18 @@ const Dashboard: React.FC = () => {
           {/* Render the selected content */}
         </div>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };

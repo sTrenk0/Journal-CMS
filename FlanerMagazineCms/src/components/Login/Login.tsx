@@ -1,20 +1,76 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginForm: React.FC = () => {
   // State to store form values
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>();
+
+  const navigate = useNavigate(); // Use the useNavigate hook
 
   // Handler for form submission
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form submitted");
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("Remember Me:", rememberMe);
-    // Add logic to handle form submission, e.g., API call
+
+    const data = new FormData();
+    data.append("email", email);
+    data.append("password", password);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/login",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true, // Include cookies for authorization
+        }
+      );
+      if (response.status === 204) {
+        // Optionally handle any further actions (e.g., redirect)
+        console.log("Login succcesfull");
+        navigate("/panel/admin/");
+      }
+    } catch (error: unknown) {
+      console.log(error);
+
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 400) {
+          console.log("Bad credentials. Login Failed.");
+          setMessage(
+            error.response.data.detail || "Login failed, bad credentials."
+          );
+
+          // Logging the error response for debugging
+          console.log("Error responce", error.response.data.detail);
+
+          toast.error("Login or password are incorrect");
+        } else if (error.response && error.response.status === 422) {
+          console.log("Validation error. Login Failed.");
+
+          // Assuming error.response.data contains the message
+          setMessage(error.response.data.detail || "Validation error.");
+
+          // Logging the error response for debugging
+          console.log("Error responce", error.response.data.detail);
+        }
+      } else {
+        setMessage("An unexpected error occurred."); // Fallback for non-Axios errors
+        toast.error("Unknown error had occured");
+      }
+    }
   };
+
+  useEffect(() => {
+    if (message) {
+      console.log("Updated message:", message);
+    }
+  }, [message]);
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 font-sans">
@@ -61,28 +117,6 @@ const LoginForm: React.FC = () => {
                   required
                 />
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="remember"
-                      aria-describedby="remember"
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)} // Update remember me state
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="remember"
-                      className="text-gray-500 dark:text-gray-300"
-                    >
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-              </div>
               <button
                 type="submit"
                 className="w-full text-white bg-[#2563EB] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -93,6 +127,18 @@ const LoginForm: React.FC = () => {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </section>
   );
 };
