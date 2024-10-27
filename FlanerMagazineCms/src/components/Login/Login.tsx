@@ -28,12 +28,10 @@ const LoginForm: React.FC = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          withCredentials: true, // Include cookies for authorization
+          withCredentials: true,
         }
       );
       if (response.status === 204) {
-        // Optionally handle any further actions (e.g., redirect)
-        console.log("Login succcesfull");
         navigate("/panel/admin/");
       }
     } catch (error: unknown) {

@@ -1,4 +1,4 @@
-import { ChevronFirst, ChevronLast } from "lucide-react";
+import { ChevronFirst, ChevronLast, Lock } from "lucide-react";
 import logo from "../assets/logo.png";
 import {
   createContext,
@@ -94,11 +94,10 @@ const SidebarItem: FC<SidebarItemProps> = ({
         {text}
       </span>
       {alert && (
-        <div
-          className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
-            expanded ? "" : "top-2"
-          }`}
-        ></div>
+        <div className={`absolute right-2 ${expanded ? "" : "top-2"}`}>
+          {" "}
+          <Lock size={15} />{" "}
+        </div>
       )}
 
       {!expanded && (

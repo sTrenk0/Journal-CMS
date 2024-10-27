@@ -16,28 +16,44 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UserAccount from "./DashboardCompoenents/UserAccount";
+import ManualProduct from "./DashboardCompoenents/ManualProduct";
+import User from "./DashboardCompoenents/User";
+import Posts from "./DashboardCompoenents/Posts";
 
 // Example components for different tabs
-const PostsComponent = () => <div>Posts Content</div>;
-const UsersComponent = () => <div>Users Content</div>;
-const AccountComponent = () => <div>Account Content</div>;
-const ManualProductsComponent = () => <div>Manual Products Content</div>;
-const ViewWebsiteComponent = () => <div>View Website Content</div>;
 const PaymentHistoryComponent = () => <div>Payment History Content</div>;
+const PasswordRecovery = () => <div>Password Recovery Content</div>;
+
+export interface MeUser {
+  id: string;
+  is_active: boolean;
+  email: string;
+  is_superuser: boolean;
+}
 
 const Dashboard: React.FC = () => {
+  const [isadmin, setIsadmin] = useState<boolean>(true);
+  const [user, setMeuser] = useState<MeUser | null>(null);
   const navigate = useNavigate();
 
   const checkAuthorization = async () => {
     try {
-      const response = await axios.get(
+      const meUser = await axios.get(
         "http://localhost:8000/api/admin/users/me",
         {
           withCredentials: true,
         }
       );
 
-      console.log(response.data);
+      setMeuser(meUser.data);
+      console.log(meUser);
+
+      if (meUser.data.is_superuser) {
+        setIsadmin(true);
+      } else {
+        setIsadmin(false);
+      }
     } catch (error) {
       // Redirect based on error
       if (axios.isAxiosError(error)) {
@@ -55,28 +71,29 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     checkAuthorization();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // State to track which tab is selected
+  // Track which tab is selected
   const [selectedTab, setSelectedTab] = useState<string>("posts");
 
   // Function to render content based on selected tab
   const renderContent = () => {
     switch (selectedTab) {
       case "posts":
-        return <PostsComponent />;
+        return <Posts />;
       case "users":
-        return <UsersComponent />;
+        return <User />;
       case "account":
-        return <AccountComponent />;
+        return <UserAccount user={user} />;
       case "manualProducts":
-        return <ManualProductsComponent />;
-      case "viewWebsite":
-        return <ViewWebsiteComponent />;
+        return <ManualProduct />;
       case "paymentHistory":
         return <PaymentHistoryComponent />;
+      case "PasswordRecovery":
+        return <PasswordRecovery />;
       default:
-        return <PostsComponent />; // Default to "Posts"
+        return <Posts />;
     }
   };
 
@@ -84,7 +101,6 @@ const Dashboard: React.FC = () => {
     <div className="bg-white font-sans">
       <div className="flex">
         <Sidebar>
-          {/* Sidebar items with onClick handlers */}
           <SidebarItem
             icon={<NotepadText size={20} />}
             text="Posts"
@@ -94,7 +110,7 @@ const Dashboard: React.FC = () => {
           <SidebarItem
             icon={<Users size={20} />}
             text="Users"
-            alert
+            alert={!isadmin}
             active={selectedTab === "users"}
             onClick={() => setSelectedTab("users")}
           />
@@ -110,12 +126,14 @@ const Dashboard: React.FC = () => {
             active={selectedTab === "manualProducts"}
             onClick={() => setSelectedTab("manualProducts")}
           />
-          <SidebarItem
-            icon={<IconLink size={20} />}
-            text="View Website"
-            active={selectedTab === "viewWebsite"}
-            onClick={() => setSelectedTab("viewWebsite")}
-          />
+          <Link to={"/"}>
+            <SidebarItem
+              icon={<IconLink size={20} />}
+              text="View Website"
+              active={selectedTab === "viewWebsite"}
+              onClick={() => setSelectedTab("viewWebsite")}
+            />
+          </Link>
           <SidebarItem
             icon={<CreditCard size={20} />}
             text="Payment History"
@@ -135,11 +153,9 @@ const Dashboard: React.FC = () => {
           </Link>
         </Sidebar>
 
-        {/* Main content area */}
         <div className="flex-1">
-          <Navbar />
+          <Navbar user={user} />
           <div className="p-4">{renderContent()}</div>{" "}
-          {/* Render the selected content */}
         </div>
       </div>
       <ToastContainer

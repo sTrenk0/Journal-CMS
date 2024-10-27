@@ -1,7 +1,34 @@
 import { Bell } from "lucide-react";
 import Tooltip from "./Tooltip";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { MeUser } from "../Dashboard";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  user: MeUser | null;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ user }) => {
+  const navigate = useNavigate();
+
+  const login = async () => {
+    try {
+      await axios.post(
+        "http://localhost:8000/api/auth/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      navigate("/panel/admin/login/");
+    } catch {
+      toast.error("Ooops! Something went wrong on logout.");
+    }
+  };
+
   return (
     <nav
       className="bg-white  font-sans text-black"
@@ -15,7 +42,10 @@ const Navbar: React.FC = () => {
                 href="#"
                 className="block py-2 px-3 md:p-0 text-slate-950 rounded md:bg-transparent"
               >
-                <button className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-2 border border-red-500 hover:border-transparent rounded">
+                <button
+                  className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-2 border border-red-500 hover:border-transparent rounded"
+                  onClick={login}
+                >
                   Logout
                 </button>
               </a>
@@ -37,10 +67,13 @@ const Navbar: React.FC = () => {
               >
                 <img
                   alt=""
-                  src="https://botanica.gallery/wp/wp-content/plugins/buddypress-first-letter-avatar/images/roboto/512/cyrillic_1072.png"
+                  src={`https://ui-avatars.com/api/?name=${user?.email}&background=ad3a48&color=fff`}
                   className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
                 />{" "}
-                <span className="ml-2 font-bold">Admin</span>
+                <span className="ml-2 font-bold">{user?.email}</span>
+                <span className="ml-2 font-bold">
+                  {user?.is_superuser === true && <span>(admin)</span>}
+                </span>
               </a>
             </li>
           </ul>
