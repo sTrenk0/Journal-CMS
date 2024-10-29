@@ -1,5 +1,7 @@
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
+import PostList from "../components/PostList";
+import NewPost from "../components/NewPost";
 
 function Posts() {
   return (
@@ -11,10 +13,14 @@ function Posts() {
         </TabList>
 
         <TabPanel>
-          <div>Posts</div>
+          <div>
+            <PostList />
+          </div>
         </TabPanel>
         <TabPanel>
-          <div>New Post</div>
+          <div>
+            <NewPost />
+          </div>
         </TabPanel>
       </Tabs>
     </div>

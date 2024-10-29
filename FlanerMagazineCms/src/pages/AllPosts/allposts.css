@@ -10,12 +10,23 @@ a:hover {
 .title_img {
   width: 260px;
   height: 350px;
+  display: block; /* Ensures no extra space from inline elements */
+  margin: 0; /* Removes any default margin */
 }
 
 .image_container {
   box-shadow: 0 0 150px #abbcc2;
-  /*border: 1px solid #000;*/
+  display: inline-block; /* Aligns shadow with image boundaries */
+  overflow: hidden; /* Ensures shadow aligns tightly */
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
 .article {
   margin-top: 87px;
+}
+
+.image_container,
+.title_img {
+  line-height: 0;
 }

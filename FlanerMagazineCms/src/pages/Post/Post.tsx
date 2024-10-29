@@ -209,31 +209,21 @@ function Post() {
                       </button>
                     </div>
 
-                    <div className="flex justify-center mt-6">
+                    <div className="flex justify-center mt-7">
                       <div className="relative w-3/5">
-                        <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                          <svg
-                            className="w-4 h-4 text-gray-500"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 18 18"
-                          >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M15 3H3v12h12V3ZM6.5 13h5m-5-4.5h5"
-                            />
-                          </svg>
-                        </div>
+                        <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none"></div>
                         <input
-                          type="number"
-                          id="amount"
-                          className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
-                          placeholder="Ваша сума"
+                          type="email"
+                          id="email"
+                          className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-5 p-2.5"
+                          placeholder="mail@gmail.com"
                         />
+                        <button
+                          className=" mt-8 rounded-lg bg-slate-800 py-3 px-6 border border-transparent text-center text-pretty text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                          type="button"
+                        >
+                          До оплати
+                        </button>
                       </div>
                     </div>
                   </div>
