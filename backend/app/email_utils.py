@@ -7,8 +7,6 @@ from jinja2 import Template
 from pathlib import Path
 from .settings import config
 
-
-
 SMPTP_HOST = "smtp.gmail.com"
 SMPTP_PORT = 465
 SMTPT_CLIENT_URL = f"{SMPTP_HOST}:{SMPTP_PORT}"
@@ -30,7 +28,7 @@ def send_email(
             server.sendmail(sender_email, email_to, msg.as_string())
             logging.info(f"Email successfully sent to {email_to}")
     except smtplib.SMTPException as e:
-        logging.error(f"Failed to send email to {email_to}: {e}", exc_info=True)
+        logging.exception(f"Failed to send email to {email_to}: {e}", exc_info=True)
 
 
 def render_template(template_name: str, context: Dict[str, Any]) -> str:
@@ -39,17 +37,17 @@ def render_template(template_name: str, context: Dict[str, Any]) -> str:
     return html_content
 
 
-def generate_verify_by_code_email(
+def generate_recovery_password_email_template(
         email_to: str,
-        code: int,
+        recovery_code: int,
         sender_email: str = SENDER_EMAIL,
 ) -> MIMEMultipart:
     context = {
-        "service_name": "Forbes",  # TODO:
-        "email": email_to,
-        "code": code,
+        "email_to": email_to,
+        "recovery_code": recovery_code,
+        "action_url": f"https://www.journal.com",  # TODO:
     }
-    html_content = render_template("verify_code.html", context)
+    html_content = render_template("recovery_password.html", context)
     msg = MIMEMultipart()
     msg["From"] = sender_email
     msg["To"] = email_to
@@ -58,8 +56,19 @@ def generate_verify_by_code_email(
     return msg
 
 
-def generate_product_email(
+def generate_product_email_template(
         email_to: str,
+        source_product_url: str,
         sender_email: str = SENDER_EMAIL,
 ) -> MIMEMultipart:
-    pass
+    context = {
+        "email_to": email_to,
+        "source_product_url": source_product_url
+    }
+    html_content = render_template("product_email.html", context)
+    msg = MIMEMultipart()
+    msg["From"] = sender_email
+    msg["To"] = email_to
+    html_part = MIMEText(html_content, "html")
+    msg.attach(html_part)
+    return msg

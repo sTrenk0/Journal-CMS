@@ -1,21 +1,20 @@
 from datetime import timedelta, datetime, timezone
 from typing import Union, Optional
 
-
 from .hash import Hasher
-from app.database.dal import UserDAL
-from app.database.models import User
+from app.user.dal import UserDAL
+from app.user.models import UserModel
+from app.settings import config
 from .transport import COOKIE_MAX_AGE
 from jose import jwt, JWTError
 
-
-SECRET = "some_jwt_secret"
+SECRET = config.jwt_secret
 
 
 async def authenticate_user(
         email: str, password: str, user_dal: UserDAL
-) -> Union[User, None]:
-    user = await user_dal.get_user_by_email(email=email)
+) -> Union[UserModel, None]:
+    user = await user_dal.get_by_email(email=email)
     if user is None:
         return
     if not user.is_active:

@@ -1,19 +1,10 @@
 from datetime import datetime
-from typing import Union, Optional, List
-from pydantic import BaseModel, EmailStr, ConfigDict, HttpUrl, Field
+from typing import Optional, List
 from uuid import UUID
 
+from pydantic import BaseModel, Field, HttpUrl, ConfigDict
 
-class TunedModel:
-    """tells pydantic to convert even non dict obj to json and forbid extra attributes"""
-    model_config = ConfigDict(from_attributes=True, extra="forbid")
-
-
-class UserDumpModelMixin(BaseModel):
-    def create_update_dict(self):
-        return self.model_dump(
-            exclude_unset=True,
-        )
+from app.schemas_utils import TunedModel
 
 
 class ProductDumpModelMixin(BaseModel):
@@ -37,50 +28,44 @@ class ProductDumpModelMixin(BaseModel):
         return dumped_model_dict
 
 
-class CreateUser(UserDumpModelMixin, TunedModel):
-    email: EmailStr
-    password: str
-    is_active: bool = True
-
-
-class UpdateUser(UserDumpModelMixin, TunedModel):
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
-    is_active: Optional[bool] = None
-
-
-class ResponseUser(BaseModel, TunedModel):
-    id: UUID
-    is_active: bool
-    email: EmailStr
-    is_superuser: bool
-
-
 class CreateProduct(TunedModel, ProductDumpModelMixin):
     name: str
     source_product_url: HttpUrl
-    preview_urls: Optional[List[HttpUrl]] = Field(default=[], max_items=3)
+    preview_urls: List[HttpUrl] = Field(max_items=5, min_items=3)
     is_active: Optional[bool] = True
     description: Optional[str] = None
-    price: int
 
 
 class UpdateProduct(TunedModel, ProductDumpModelMixin):
     name: Optional[str] = None
     source_product_url: Optional[HttpUrl] = None
-    preview_urls: Optional[list[HttpUrl]] = Field(None, max_items=3)
+    preview_urls: List[Optional[HttpUrl]] = Field([None], max_items=5, min_items=3)
     is_active: Optional[bool] = None
     description: Optional[str] = None
-    price: Optional[int] = None
 
 
-class ResponseProduct(TunedModel, BaseModel):
+class ProductResponse(TunedModel, BaseModel):
     id: UUID
     name: str
     source_product_url: HttpUrl
     preview_urls: list[HttpUrl]
     is_active: bool
     description: str
-    price: int
-    created_at: Union[datetime, str]
-    updated_at: Union[datetime, str]
+    created_at: datetime
+    updated_at: datetime
+
+
+class ProductPublicResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True, extra="ignore")
+    id: UUID
+    name: str
+    preview_urls: List[HttpUrl]
+    description: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class ProductStatsResponse(TunedModel, BaseModel):
+    id: UUID
+    name: str
+    sold: int
