@@ -1,10 +1,10 @@
 from typing import Literal, Optional
 from fastapi import Response, status
 from fastapi.security import APIKeyCookie
-from app.openapi_responses import OpenAPIResponseType
+from app.openapi_type import OpenAPIResponseType
 from base64 import b64encode
 
-COOKIE_MAX_AGE = 60 * 60 * 3
+COOKIE_MAX_AGE = 60 * 60 * 24 * 3
 COOKIE_PATH = "/"
 COOKIE_DOMAIN = "localhost"
 COOKIE_NAME = "token"
