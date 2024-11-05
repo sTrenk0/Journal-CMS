@@ -19,7 +19,7 @@ const UsersTable = () => {
 
   useEffect(() => {
     axios
-      .get<UserModel[]>("http://localhost:8000/api/admin/users/", {
+      .get<UserModel[]>("http://localhost:8000/api/v1/admin/users/", {
         withCredentials: true,
       })
       .then((response) => {
@@ -35,7 +35,7 @@ const UsersTable = () => {
       try {
         console.log("Deleting user with ID:", deleteUserId);
         await axios.delete(
-          `http://localhost:8000/api/admin/users/${deleteUserId}`,
+          `http://localhost:8000/api/v1/admin/users/${deleteUserId}`,
           { withCredentials: true }
         );
 

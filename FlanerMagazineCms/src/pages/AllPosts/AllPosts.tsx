@@ -28,7 +28,7 @@ function AllPosts() {
   useEffect(() => {
     // Fetching data from API using axios
     axios
-      .get<PreviewUrls[]>("http://localhost:8000/api/products")
+      .get<PreviewUrls[]>("http://localhost:8000/api/v1/products/")
       .then((response) => {
         setData(response.data); // Store API data in state
         setLoading(false); // Stop loading

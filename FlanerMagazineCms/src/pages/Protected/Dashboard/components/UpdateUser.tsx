@@ -45,7 +45,7 @@ const UpdateUser: FC = () => {
     console.log("User Data:", userData);
 
     try {
-      axios.patch(`http://localhost:8000/api/admin/users/${Id}`, userData, {
+      axios.patch(`http://localhost:8000/api/v1/admin/users/${Id}`, userData, {
         withCredentials: true,
       });
       toast.success("User updated successfully");

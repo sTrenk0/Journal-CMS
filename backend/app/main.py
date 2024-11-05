@@ -18,7 +18,8 @@ async def lifespan(*args, **kwargs):
 # put your localhost with your port of frontend app here
 origins = [
     "http://localhost",
-    "http://localhost:5173",
+    "http://localhost:8080",
+    "http://localhost:5173/"
 ]
 fastapi_app = FastAPI(
     lifespan=lifespan,
@@ -44,9 +45,6 @@ def raise_err():
 
 # use this in case when you want run app directly without docker
 # if __name__ == "__main__":
-#     import uvicorn
-#     from .settings import config
-#
-#     uvicorn.run(
-#         "app.main:fastapi_app", host="0.0.0.0", port=config.app_port, reload=True
-#     )
+    # import uvicorn
+    # from .settings import config
+    # uvicorn.run("app.main:fastapi_app", host="0.0.0.0", port=config.app_port, reload=True)

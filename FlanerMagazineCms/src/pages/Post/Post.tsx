@@ -31,7 +31,7 @@ function Post() {
   useEffect(() => {
     // Fetching data from API using axios
     axios
-      .get<ProductInfo>(`http://localhost:8000/api/products/id/${id}`)
+      .get<ProductInfo>(`http://localhost:8000/api/v1/products/id/${id}/`)
       .then((response) => {
         setData(response.data); // Store API data in state
         setLoading(false); // Stop loading
