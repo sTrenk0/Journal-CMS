@@ -16,11 +16,11 @@ TEMPLATES_DIR: Path = Path(__file__).parent.parent / "email-templates"
 
 
 def send_email(
-        msg: MIMEMultipart | str,
-        email_to: str,
-        smtpt_client_url: str = SMTPT_CLIENT_URL,
-        sender_email: str = SENDER_EMAIL,
-        client_password: str = CLIENT_PASSWORD,
+    msg: MIMEMultipart | str,
+    email_to: str,
+    smtpt_client_url: str = SMTPT_CLIENT_URL,
+    sender_email: str = SENDER_EMAIL,
+    client_password: str = CLIENT_PASSWORD,
 ) -> None:
     try:
         with smtplib.SMTP_SSL(smtpt_client_url) as server:
@@ -38,9 +38,9 @@ def render_template(template_name: str, context: Dict[str, Any]) -> str:
 
 
 def generate_recovery_password_email_template(
-        email_to: str,
-        recovery_code: int,
-        sender_email: str = SENDER_EMAIL,
+    email_to: str,
+    recovery_code: int,
+    sender_email: str = SENDER_EMAIL,
 ) -> MIMEMultipart:
     context = {
         "email_to": email_to,
@@ -57,15 +57,27 @@ def generate_recovery_password_email_template(
 
 
 def generate_product_email_template(
-        email_to: str,
-        source_product_url: str,
-        sender_email: str = SENDER_EMAIL,
+    email_to: str,
+    source_product_url: str,
+    sender_email: str = SENDER_EMAIL,
 ) -> MIMEMultipart:
-    context = {
-        "email_to": email_to,
-        "source_product_url": source_product_url
-    }
+    context = {"email_to": email_to, "source_product_url": source_product_url}
     html_content = render_template("product_email.html", context)
+    msg = MIMEMultipart()
+    msg["From"] = sender_email
+    msg["To"] = email_to
+    html_part = MIMEText(html_content, "html")
+    msg.attach(html_part)
+    return msg
+
+
+def generate_internal_error_email_template(
+    email_to: str,
+    traceback_log: str,
+    sender_email: str = SENDER_EMAIL,
+) -> MIMEMultipart:
+    context = {"email_to": email_to, "traceback_log": traceback_log}
+    html_content = render_template("internal_error.html", context)
     msg = MIMEMultipart()
     msg["From"] = sender_email
     msg["To"] = email_to

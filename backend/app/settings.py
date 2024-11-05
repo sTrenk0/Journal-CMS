@@ -31,6 +31,7 @@ class _Config(BaseSettings):
     redis_port: int
     redis_password: str
     jwt_secret: str
+    is_notifiable_internal_exception: bool
 
     @computed_field
     @property
