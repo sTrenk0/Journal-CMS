@@ -39,7 +39,7 @@ const CreateUser: FC = () => {
     console.log("User Data:", userData);
 
     try {
-      axios.post("http://localhost:8000/api/admin/users/", userData, {
+      axios.post("http://localhost:8000/api/v1/admin/users/", userData, {
         withCredentials: true,
       });
       toast.success("User created successfully");

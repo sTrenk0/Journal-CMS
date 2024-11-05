@@ -32,13 +32,17 @@ const NewPost: FC = () => {
       preview_urls: previewUrls,
       is_active: isactive,
       description: description,
-      price: 0,
     };
 
     try {
-      await axios.post("http://localhost:8000/api/admin/products/", postData, {
-        withCredentials: true,
-      });
+      console.log(postData);
+      await axios.post(
+        "http://localhost:8000/api/v1/admin/products/",
+        postData,
+        {
+          withCredentials: true,
+        }
+      );
       toast.success("Post created successfully");
     } catch (error: unknown) {
       console.error("Error creating post:", error);

@@ -22,7 +22,7 @@ const LoginForm: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/login",
+        "http://localhost:8000/api/v1/auth/login",
         data,
         {
           headers: {
