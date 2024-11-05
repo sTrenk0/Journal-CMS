@@ -15,7 +15,7 @@ class _Config(BaseSettings):
         env_file_encoding="utf-8",
     )
     api_version: ClassVar = "v1"
-    _launch_option: Literal["local", "docker"] = "local"
+    _launch_option: Literal["local", "docker"] = "docker"
     app_initial_superuser_email: str
     app_initial_superuser_password: str
     app_sender_email: str
