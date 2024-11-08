@@ -10,13 +10,13 @@ from .settings import config
 SMPTP_HOST = "smtp.gmail.com"
 SMPTP_PORT = 465
 SMTPT_CLIENT_URL = f"{SMPTP_HOST}:{SMPTP_PORT}"
-SENDER_EMAIL = config.app_sender_email
-CLIENT_PASSWORD = config.app_client_password
+SENDER_EMAIL = config.sender_email
+CLIENT_PASSWORD = config.client_email_password
 TEMPLATES_DIR: Path = Path(__file__).parent.parent / "email-templates"
 
 
 def send_email(
-    msg: MIMEMultipart | str,
+    msg: Union[MIMEMultipart, str],
     email_to: str,
     smtpt_client_url: str = SMTPT_CLIENT_URL,
     sender_email: str = SENDER_EMAIL,

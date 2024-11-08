@@ -8,11 +8,11 @@ from app.settings import config
 from .transport import COOKIE_MAX_AGE
 from jose import jwt, JWTError
 
-SECRET = config.jwt_secret
+SECRET = config.app_jwt_secret
 
 
 async def authenticate_user(
-        email: str, password: str, user_dal: UserDAL
+    email: str, password: str, user_dal: UserDAL
 ) -> Union[UserModel, None]:
     user = await user_dal.get_by_email(email=email)
     if user is None:

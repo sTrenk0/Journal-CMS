@@ -16,10 +16,12 @@ class _Config(BaseSettings):
     )
     api_version: ClassVar = "v1"
     _launch_option: Literal["local", "docker"] = "docker"
+    app_jwt_secret: str
     app_initial_superuser_email: str
     app_initial_superuser_password: str
-    app_sender_email: str
-    app_client_password: str
+    sender_email: str
+    client_email_password: str
+    app_is_notifiable_internal_exception: bool
     app_port: int
     postgres_port: int
     postgres_user: str
@@ -30,8 +32,6 @@ class _Config(BaseSettings):
     redis_host_name: str
     redis_port: int
     redis_password: str
-    jwt_secret: str
-    is_notifiable_internal_exception: bool
 
     @computed_field
     @property
