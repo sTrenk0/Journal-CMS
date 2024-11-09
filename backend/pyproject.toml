@@ -23,15 +23,47 @@ python-multipart = "^0.0.17"
 uvicorn = "0.32.0"
 pytz = "2024.2"
 
-
-
-
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.2"
 black = "^24.8.0"
 alembic = "^1.13.3"
 pytest-mock = "^3.14.0"
 mypy = "^1.13.0"
+ruff = "^0.7.3"
+
+
+[tool.ruff]
+line-length = 88
+extend-exclude = [
+    ".venv",
+    "__pycache__",
+    "migrations",
+    "build",
+    "dist",
+    "migrations",
+    "alembic",
+    "test"
+]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "B",
+    "S",
+    "I",
+]
+ignore = [
+    "E203",
+    "E501",
+    "E",
+    "I"
+]
+extend-select = ["I"]
+
+[tool.ruff.format]
+quote-style = "double"
+line-ending = "auto"
 
 
 [build-system]
