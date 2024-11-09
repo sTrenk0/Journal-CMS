@@ -1,6 +1,6 @@
-import random
+import secrets
 from pydantic import EmailStr
-from typing import Annotated, TypeVar
+from typing import Annotated, Dict
 from fastapi import (
     APIRouter,
     status,
@@ -24,9 +24,10 @@ from app.auth.errors import AuthError
 from app.auth.deps import get_current_active_user
 from app.user.dal import UserDAL
 
-T_USER_EMAIL = TypeVar("T_USER_EMAIL", bound=str)
-T_CODE = TypeVar("T_CODE", bound=int)
-STORAGE_EMAIL_AND_RECOVERY_PASSWORD_CODE: dict[T_USER_EMAIL, dict[str, T_CODE]] = {}
+T_USER_EMAIL = str
+T_CODE = int
+STORAGE_EMAIL_AND_RECOVERY_PASSWORD_CODE: Dict[T_USER_EMAIL, Dict[str, T_CODE]] = {}
+
 
 auth_router = APIRouter()
 
@@ -79,7 +80,7 @@ async def request_forgot_password(
 ):
     user = await user_dal.get_by_email(email)
     if user:
-        recovery_code = random.randint(1000, 9999)
+        recovery_code = secrets.choice(range(1000, 9999))
         global STORAGE_EMAIL_AND_RECOVERY_PASSWORD_CODE
         STORAGE_EMAIL_AND_RECOVERY_PASSWORD_CODE[email] = {
             "recovery_code": recovery_code,
