@@ -16,7 +16,7 @@ from app.auth.openapi_responses import (
     UNAUTHORIZED_RESPONSE,
     NOT_VERIFY_EMAIl_RESPONSE,
 )
-from app.email_utils import generate_recovery_password_email_template, send_email
+from app.email_utils import RecoveryPasswordEmailTemplate
 from app.auth.auntification import authenticate_user, create_access_token
 from app.auth.hash import Hasher
 from app.auth.transport import CookieTransport
@@ -84,12 +84,10 @@ async def request_forgot_password(
         STORAGE_EMAIL_AND_RECOVERY_PASSWORD_CODE[email] = {
             "recovery_code": recovery_code,
         }
-        verify_email_code_template = generate_recovery_password_email_template(
+        email = RecoveryPasswordEmailTemplate(
             email_to=email, recovery_code=recovery_code
         )
-        background_tasks.add_task(
-            send_email, msg=verify_email_code_template, email_to=email
-        )
+        background_tasks.add_task(email.send)
         return
 
     return

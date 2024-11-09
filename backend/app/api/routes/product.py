@@ -19,7 +19,7 @@ from app.product.openapi_responses import (
     PRODUCT_WITH_NAME_OR_SOURCE_URL_ALREADY_EXISTS_RESPONSE
 )
 from app.auth.openapi_responses import FORBIDDEN_RESPONSE, UNAUTHORIZED_RESPONSE
-from app.email_utils import send_email, generate_product_email_template
+from app.email_utils import ProductEmailTemplate
 
 product_router = APIRouter()
 admin_product_router = APIRouter()
@@ -258,11 +258,11 @@ async def send_manual_product(
 
     product = await product_dal.get_by_id(product_id, only_is_active=True)
     if product is None:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND
-        )
-    template = generate_product_email_template(email_to=email_to, source_product_url=product.source_product_url)
-    background_tasks.add_task(send_email, msg=template, email_to=email_to)
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND)
+    email = ProductEmailTemplate(
+        email_to=email_to, source_product_url=product.source_product_url
+    )
+    background_tasks.add_task(email.send)
     return
 
 

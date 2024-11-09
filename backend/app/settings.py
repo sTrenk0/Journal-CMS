@@ -16,6 +16,7 @@ class _Config(BaseSettings):
     )
     api_version: ClassVar = "v1"
     _launch_option: Literal["local", "docker"] = "docker"
+    project_name: str = "Journal-CMS"
     app_jwt_secret: str
     app_initial_superuser_email: str
     app_initial_superuser_password: str

@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Dict, Any, Protocol
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
@@ -7,68 +7,71 @@ from jinja2 import Template
 from pathlib import Path
 from .settings import config
 
-SMPTP_HOST = "smtp.gmail.com"
-SMPTP_PORT = 465
-SMTPT_CLIENT_URL = f"{SMPTP_HOST}:{SMPTP_PORT}"
-SENDER_EMAIL = config.sender_email
-CLIENT_PASSWORD = config.client_email_password
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 465
+SMTP_CLIENT_URL = f"{SMTP_HOST}:{SMTP_PORT}"
 TEMPLATES_DIR: Path = Path(__file__).parent.parent / "email-templates"
 
 
-def send_email(
-    msg: Union[MIMEMultipart, str],
-    email_to: str,
-    smtpt_client_url: str = SMTPT_CLIENT_URL,
-    sender_email: str = SENDER_EMAIL,
-    client_password: str = CLIENT_PASSWORD,
-) -> None:
-    try:
-        with smtplib.SMTP_SSL(smtpt_client_url) as server:
-            server.login(sender_email, client_password)
-            server.sendmail(sender_email, email_to, msg.as_string())
-            logging.info(f"Email successfully sent to {email_to}")
-    except smtplib.SMTPException as e:
-        logging.exception(f"Failed to send email to {email_to}: {e}", exc_info=True)
+class EmailMessage:
+    def __init__(
+        self, email_to: str, template_name: str, subject: str, context: dict[str, str]
+    ):
+        self.email_to = email_to
+        self.subject = subject
+        self.template_name = template_name
+        self.context = context
+        self._msg = self._generate_msg()
+
+    def _render_template(self) -> str:
+        template_path = TEMPLATES_DIR / self.template_name
+        template = Template(template_path.read_text())
+        return template.render(self.context)
+
+    def _generate_msg(self) -> MIMEMultipart:
+        msg = MIMEMultipart()
+        msg["From"] = config.sender_email
+        msg["To"] = self.email_to
+        msg["Subject"] = self.subject
+        msg.attach(MIMEText(self._render_template(), "html"))
+        return msg
+
+    def send(self) -> None:
+        try:
+            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as server:
+                server.login(config.sender_email, config.client_email_password)
+                server.sendmail(
+                    config.sender_email, self.email_to, self._msg.as_string()
+                )
+                logging.info(f"Email successfully sent to {self.email_to}")
+        except smtplib.SMTPException as e:
+            logging.exception(
+                f"Failed to send email to {self.email_to}: {e}", exc_info=True
+            )
 
 
-def render_template(template_name: str, context: Dict[str, Any]) -> str:
-    template_path = TEMPLATES_DIR / template_name
-    html_content = Template(template_path.read_text()).render(context)
-    return html_content
+class RecoveryPasswordEmailTemplate(EmailMessage):
+    def __init__(self, email_to: str, recovery_code: int):
+        super().__init__(
+            email_to=email_to,
+            subject=config.project_name + "(Recovery password)",
+            template_name="recovery_password.html",
+            context={
+                "email_to": email_to,
+                "recovery_code": recovery_code,
+                "action_url": "https://www.journal.com",
+            },
+        )
 
 
-def generate_recovery_password_email_template(
-    email_to: str,
-    recovery_code: int,
-    sender_email: str = SENDER_EMAIL,
-) -> MIMEMultipart:
-    context = {
-        "email_to": email_to,
-        "recovery_code": recovery_code,
-        "action_url": f"https://www.journal.com",  # TODO:
-    }
-    html_content = render_template("recovery_password.html", context)
-    msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["To"] = email_to
-    html_part = MIMEText(html_content, "html")
-    msg.attach(html_part)
-    return msg
-
-
-def generate_product_email_template(
-    email_to: str,
-    source_product_url: str,
-    sender_email: str = SENDER_EMAIL,
-) -> MIMEMultipart:
-    context = {"email_to": email_to, "source_product_url": source_product_url}
-    html_content = render_template("product_email.html", context)
-    msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["To"] = email_to
-    html_part = MIMEText(html_content, "html")
-    msg.attach(html_part)
-    return msg
+class ProductEmailTemplate(EmailMessage):
+    def __init__(self, email_to: str, source_product_url: str):
+        super().__init__(
+            email_to=email_to,
+            subject=config.project_name + "(Product email)",
+            template_name="product_email.html",
+            context={"email_to": email_to, "source_product_url": source_product_url},
+        )
 
 
 def generate_internal_error_email_template(

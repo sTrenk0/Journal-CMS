@@ -91,15 +91,10 @@ async def payment_hook(
                 )
 
             product = await product_dal.get_by_id(product_id, only_is_active=True)
-            template = generate_product_email_template(
-                email_to=payment["customer_email"],
-                source_product_url=product.source_product_url
+            email = ProductEmailTemplate(
+                payment["customer_email"], product.source_product_url
             )
-            background_tasks.add_task(
-                send_email,
-                msg=template,
-                email_to=payment["customer_email"]
-            )
+            background_tasks.add_task(email.send)
         else:
             payment = prepare_data_to_redis_storage(
                 {
