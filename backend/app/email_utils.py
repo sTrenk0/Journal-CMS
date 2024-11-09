@@ -74,16 +74,15 @@ class ProductEmailTemplate(EmailMessage):
         )
 
 
-def generate_internal_error_email_template(
-    email_to: str,
-    traceback_log: str,
-    sender_email: str = SENDER_EMAIL,
-) -> MIMEMultipart:
-    context = {"email_to": email_to, "traceback_log": traceback_log}
-    html_content = render_template("internal_error.html", context)
-    msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["To"] = email_to
-    html_part = MIMEText(html_content, "html")
-    msg.attach(html_part)
-    return msg
+class InternalErrorEmailTemplate(EmailMessage):
+    def __init__(self, email_to: str, traceback_log: str, dt_isoformat: str):
+        super().__init__(
+            email_to=email_to,
+            subject=config.project_name + "(Internal server error)",
+            template_name="internal_error.html",
+            context={
+                "email_to": email_to,
+                "traceback_log": traceback_log,
+                "dt_isoformat": dt_isoformat,
+            },
+        )

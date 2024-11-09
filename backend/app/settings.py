@@ -22,6 +22,7 @@ class _Config(BaseSettings):
     app_initial_superuser_password: str
     sender_email: str
     client_email_password: str
+    app_internal_exception_timezone_view: str = "Europe/Kyiv"
     app_is_notifiable_internal_exception: bool
     app_port: int
     postgres_port: int

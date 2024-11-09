@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.core import router
 from app.database.initial import create_initial_superuser
 from app.settings import config
+from app.exception_handlers import http_exception_internal_handler
 
 
 def create_configured_app() -> FastAPI:
@@ -25,4 +26,5 @@ def create_configured_app() -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(router)
+    app.add_exception_handler(Exception, http_exception_internal_handler)
     return app
