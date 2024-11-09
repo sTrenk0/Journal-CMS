@@ -6,9 +6,9 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
-from app.product.models import ProductModel
-from app.user.models import UserModel
-from app.payment.models import PaymentModel, TipsInfoModel, PaymentInfoModel, CancelListModel, WalletDataModel
+import app.product.models
+import app.user.models
+import app.payment.models
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -22,6 +22,7 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 from app.database.core import Base
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -30,6 +31,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 from app.settings import config as app_config
+
 config.set_main_option("sqlalchemy.url", app_config.postgres_url)
 
 
