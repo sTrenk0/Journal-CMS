@@ -65,6 +65,12 @@ extend-select = ["I"]
 quote-style = "double"
 line-ending = "auto"
 
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 3
+line_length = 88
+
 
 [build-system]
 requires = ["poetry-core"]
