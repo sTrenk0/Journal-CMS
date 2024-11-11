@@ -32,7 +32,6 @@ pytest-mock = "^3.14.0"
 mypy = "^1.13.0"
 ruff = "^0.7.3"
 
-
 [tool.ruff]
 line-length = 88
 extend-exclude = [
@@ -41,9 +40,8 @@ extend-exclude = [
     "migrations",
     "build",
     "dist",
-    "migrations",
     "alembic",
-    "test"
+    "tests"
 ]
 
 [tool.ruff.lint]
@@ -66,6 +64,15 @@ quote-style = "double"
 line-ending = "auto"
 
 [tool.isort]
+skip = [
+    ".venv",
+    "__pycache__",
+    "migrations",
+    "build",
+    "dist",
+    "alembic",
+    "tests"
+]
 multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 3
