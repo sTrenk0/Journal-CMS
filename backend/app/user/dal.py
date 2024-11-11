@@ -1,30 +1,38 @@
-from typing import Union, List, Annotated
+from typing import (
+    Annotated,
+    List,
+    Union,
+)
 from uuid import UUID
 
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
-from .models import UserModel
+
 from app.database.core import get_async_session
+
+from .models import UserModel
 
 
 class UserDAL:
     """Data Access Layer for operating user info"""
 
     @staticmethod
-    def get_as_dependency(db_session: Annotated[AsyncSession, Depends(get_async_session)]) -> "UserDAL":
+    def get_as_dependency(
+        db_session: Annotated[AsyncSession, Depends(get_async_session)],
+    ) -> "UserDAL":
         yield UserDAL(db_session)
 
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
     async def create(
-            self,
-            email: str,
-            hashed_password: str,
-            is_active=True,
-            is_superuser=False,
+        self,
+        email: str,
+        hashed_password: str,
+        is_active=True,
+        is_superuser=False,
     ) -> UserModel:
         new_user = UserModel(
             email=email,

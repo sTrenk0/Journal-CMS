@@ -1,6 +1,5 @@
 import pathlib
-
-from typing import Literal, ClassVar
+from typing import ClassVar, Literal
 
 from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict

@@ -1,29 +1,38 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, HttpUrl, ConfigDict
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    HttpUrl,
+)
 
 from app.schemas_utils import TunedModel
 
 
 class ProductDumpModelMixin(BaseModel):
     def dumb_dict_for_create(self):
-        dumped_model_dict = self.model_dump(
-            exclude_unset=False
+        dumped_model_dict = self.model_dump(exclude_unset=False)
+        dumped_model_dict["preview_urls"] = [
+            str(url) for url in dumped_model_dict["preview_urls"]
+        ]
+        dumped_model_dict["source_product_url"] = str(
+            dumped_model_dict["source_product_url"]
         )
-        dumped_model_dict["preview_urls"] = [str(url) for url in dumped_model_dict["preview_urls"]]
-        dumped_model_dict["source_product_url"] = str(dumped_model_dict["source_product_url"])
         return dumped_model_dict
 
     def dumb_dict_for_update(self):
-        dumped_model_dict = self.model_dump(
-            exclude_unset=True
-        )
+        dumped_model_dict = self.model_dump(exclude_unset=True)
         if dumped_model_dict.get("preview_urls", None) is not None:
-            dumped_model_dict["preview_urls"] = [str(url) for url in dumped_model_dict["preview_urls"]]
+            dumped_model_dict["preview_urls"] = [
+                str(url) for url in dumped_model_dict["preview_urls"]
+            ]
         if dumped_model_dict.get("source_product_url", None) is not None:
-            dumped_model_dict["source_product_url"] = str(dumped_model_dict["source_product_url"])
+            dumped_model_dict["source_product_url"] = str(
+                dumped_model_dict["source_product_url"]
+            )
 
         return dumped_model_dict
 

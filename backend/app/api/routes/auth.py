@@ -1,27 +1,28 @@
 import secrets
-from pydantic import EmailStr
 from typing import Annotated, Dict
+
 from fastapi import (
     APIRouter,
-    status,
+    BackgroundTasks,
     Depends,
     Form,
     HTTPException,
     Query,
-    BackgroundTasks,
+    status,
 )
+from pydantic import EmailStr
 
+from app.auth.auntification import authenticate_user, create_access_token
+from app.auth.deps import get_current_active_user
+from app.auth.errors import AuthError
+from app.auth.hash import Hasher
 from app.auth.openapi_responses import (
     LOGIN_BAD_CREDENTIAL_RESPONSE,
     UNAUTHORIZED_RESPONSE,
     NOT_VERIFY_EMAIl_RESPONSE,
 )
-from app.email_utils import RecoveryPasswordEmailTemplate
-from app.auth.auntification import authenticate_user, create_access_token
-from app.auth.hash import Hasher
 from app.auth.transport import CookieTransport
-from app.auth.errors import AuthError
-from app.auth.deps import get_current_active_user
+from app.email_utils import RecoveryPasswordEmailTemplate
 from app.user.dal import UserDAL
 
 T_USER_EMAIL = str

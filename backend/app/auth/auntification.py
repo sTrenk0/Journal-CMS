@@ -1,12 +1,18 @@
-from datetime import timedelta, datetime, timezone
-from typing import Union, Optional
+from datetime import (
+    datetime,
+    timedelta,
+    timezone,
+)
+from typing import Optional, Union
 
-from .hash import Hasher
+from jose import JWTError, jwt
+
+from app.settings import config
 from app.user.dal import UserDAL
 from app.user.models import UserModel
-from app.settings import config
+
+from .hash import Hasher
 from .transport import COOKIE_MAX_AGE
-from jose import jwt, JWTError
 
 SECRET = config.app_jwt_secret
 

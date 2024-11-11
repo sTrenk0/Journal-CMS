@@ -1,9 +1,11 @@
 from fastapi import APIRouter
-from .routes.auth import auth_router
-from .routes.user import user_router
-from .routes.product import product_router, admin_product_router
-from .routes.payment import payment_router, admin_payment_router
+
 from app.settings import config
+
+from .routes.auth import auth_router
+from .routes.payment import admin_payment_router, payment_router
+from .routes.product import admin_product_router, product_router
+from .routes.user import user_router
 
 router = APIRouter(prefix=f"/api/{config.api_version}")
 

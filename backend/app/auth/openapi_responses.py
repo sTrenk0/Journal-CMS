@@ -1,7 +1,9 @@
 from fastapi import status
+
 from app.openapi_type import OpenAPIResponseType
-from .errors import AuthError
 from app.schemas_utils import ErrorModel
+
+from .errors import AuthError
 
 LOGIN_BAD_CREDENTIAL_RESPONSE: OpenAPIResponseType = {
     status.HTTP_400_BAD_REQUEST: {
@@ -13,7 +15,7 @@ LOGIN_BAD_CREDENTIAL_RESPONSE: OpenAPIResponseType = {
                     "detail": AuthError.LOGIN_BAD_CREDENTIALS,
                 }
             }
-        }
+        },
     }
 }
 
@@ -27,7 +29,7 @@ UNAUTHORIZED_RESPONSE: OpenAPIResponseType = {
                     "detail": AuthError.UNAUTHORIZED,
                 }
             }
-        }
+        },
     }
 }
 
@@ -41,7 +43,7 @@ FORBIDDEN_RESPONSE: OpenAPIResponseType = {
                     "detail": AuthError.FORBIDDEN,
                 }
             }
-        }
+        },
     }
 }
 
@@ -51,11 +53,7 @@ NOT_VERIFY_EMAIl_RESPONSE: OpenAPIResponseType = {
         "description": "User not verify email",
         "model": ErrorModel,
         "content": {
-            "application/json": {
-                "example": {
-                    "detail": AuthError.NOT_VERIFY_EMAIl
-                }
-            }
-        }
+            "application/json": {"example": {"detail": AuthError.NOT_VERIFY_EMAIl}}
+        },
     }
 }

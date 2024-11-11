@@ -1,17 +1,19 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ConfigDict, AliasChoices
+from pydantic import (
+    AliasChoices,
+    BaseModel,
+    ConfigDict,
+    Field,
+)
 
 from app.schemas_utils import TunedModel
 
 
 class PaymentSchemaConfig:
-    model_config = ConfigDict(
-        from_attributes=True,
-        extra="ignore"
-    )
+    model_config = ConfigDict(from_attributes=True, extra="ignore")
 
 
 class CancelList(BaseModel, PaymentSchemaConfig):

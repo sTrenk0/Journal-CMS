@@ -1,25 +1,33 @@
-from typing import List, Annotated
+from typing import Annotated, List
 from uuid import UUID
+
 from fastapi import (
-    APIRouter, Depends, HTTPException, status, BackgroundTasks, Query
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    HTTPException,
+    Query,
+    status,
 )
 from pydantic import EmailStr
 
-from app.product.errors import ProductError
 from app.auth.deps import get_current_active_user
-from app.product.schemas import (
-    CreateProduct, UpdateProduct, ProductResponse,
-    ProductPublicResponse, ProductStatsResponse
-)
-from app.product.dal import ProductDAL
-from app.payment.dal import PaymentDAL
-
-from app.product.openapi_responses import (
-    PRODUCT_NOT_FOUND_RESPONSE,
-    PRODUCT_WITH_NAME_OR_SOURCE_URL_ALREADY_EXISTS_RESPONSE
-)
 from app.auth.openapi_responses import FORBIDDEN_RESPONSE, UNAUTHORIZED_RESPONSE
 from app.email_utils import ProductEmailTemplate
+from app.payment.dal import PaymentDAL
+from app.product.dal import ProductDAL
+from app.product.errors import ProductError
+from app.product.openapi_responses import (
+    PRODUCT_NOT_FOUND_RESPONSE,
+    PRODUCT_WITH_NAME_OR_SOURCE_URL_ALREADY_EXISTS_RESPONSE,
+)
+from app.product.schemas import (
+    CreateProduct,
+    ProductPublicResponse,
+    ProductResponse,
+    ProductStatsResponse,
+    UpdateProduct,
+)
 
 product_router = APIRouter()
 admin_product_router = APIRouter()
@@ -32,12 +40,12 @@ admin_product_router = APIRouter()
     responses={
         **PRODUCT_WITH_NAME_OR_SOURCE_URL_ALREADY_EXISTS_RESPONSE,
         **FORBIDDEN_RESPONSE,
-        **UNAUTHORIZED_RESPONSE
-    }
+        **UNAUTHORIZED_RESPONSE,
+    },
 )
 async def add_product(
-        body: CreateProduct,
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency)
+    body: CreateProduct,
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     """
     Available for active users and superuser
@@ -49,7 +57,8 @@ async def add_product(
     if product:
         if product.source_product_url == create_product_data["source_product_url"]:
             raise HTTPException(
-                status.HTTP_400_BAD_REQUEST, ProductError.SOURCE_URL_ALREADY_EXISTS,
+                status.HTTP_400_BAD_REQUEST,
+                ProductError.SOURCE_URL_ALREADY_EXISTS,
             )
         if product.name == create_product_data["name"]:
             raise HTTPException(
@@ -63,13 +72,10 @@ async def add_product(
     "/",
     response_model=List[ProductResponse],
     dependencies=[Depends(get_current_active_user)],
-    responses={
-        **FORBIDDEN_RESPONSE,
-        **UNAUTHORIZED_RESPONSE
-    }
+    responses={**FORBIDDEN_RESPONSE, **UNAUTHORIZED_RESPONSE},
 )
 async def get_all_products(
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency),
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     """
     Get is_active/inactive all products, available for active users and superuser
@@ -83,7 +89,7 @@ async def get_all_products(
     response_model=List[ProductPublicResponse],
 )
 async def get_only_active_products(
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency),
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     products = await product_dal.get_all(only_is_active=True)
     return list(map(ProductPublicResponse.model_validate, products))
@@ -96,59 +102,49 @@ async def get_only_active_products(
     responses={
         **FORBIDDEN_RESPONSE,
         **UNAUTHORIZED_RESPONSE,
-        **PRODUCT_NOT_FOUND_RESPONSE
-    }
+        **PRODUCT_NOT_FOUND_RESPONSE,
+    },
 )
 async def get_product_by_id(
-        product_id: UUID,
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency)
+    product_id: UUID,
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     """
     Get is_active/inactive product by id, available for active users and superuser
     """
     product = await product_dal.get_by_id(product_id, only_is_active=False)
     if product is None:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND
-        )
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND)
     return product
 
 
 @product_router.get(
     "/id/{product_id}",
     response_model=ProductPublicResponse,
-    responses={
-        **PRODUCT_NOT_FOUND_RESPONSE
-    }
+    responses={**PRODUCT_NOT_FOUND_RESPONSE},
 )
 async def get_only_active_product_by_id(
-        product_id: UUID,
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency),
+    product_id: UUID,
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     product = await product_dal.get_by_id(product_id, only_is_active=True)
     if product is None:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND
-        )
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND)
     return ProductPublicResponse.model_validate(product, from_attributes=True)
 
 
 @product_router.get(
     "/name/{product_name}",
     response_model=ProductPublicResponse,
-    responses={
-        **PRODUCT_NOT_FOUND_RESPONSE
-    }
+    responses={**PRODUCT_NOT_FOUND_RESPONSE},
 )
 async def get_only_active_product_by_name(
-        product_name: str,
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency)
+    product_name: str,
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     product = await product_dal.get_by_name(product_name, only_is_active=True)
     if product is None:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND
-        )
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND)
     return ProductPublicResponse.model_validate(product, from_attributes=True)
 
 
@@ -159,22 +155,20 @@ async def get_only_active_product_by_name(
     responses={
         **PRODUCT_NOT_FOUND_RESPONSE,
         **FORBIDDEN_RESPONSE,
-        **UNAUTHORIZED_RESPONSE
-    }
+        **UNAUTHORIZED_RESPONSE,
+    },
 )
 async def update_product(
-        product_id: UUID,
-        body: UpdateProduct,
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency)
+    product_id: UUID,
+    body: UpdateProduct,
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     """
     available for active users and superuser
     """
     product = await product_dal.get_by_id(product_id, only_is_active=False)
     if product is None:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND
-        )
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND)
     product = await product_dal.update(product, **body.dumb_dict_for_update())
     return product
 
@@ -186,21 +180,19 @@ async def update_product(
     responses={
         **PRODUCT_NOT_FOUND_RESPONSE,
         **FORBIDDEN_RESPONSE,
-        **UNAUTHORIZED_RESPONSE
-    }
+        **UNAUTHORIZED_RESPONSE,
+    },
 )
 async def delete_product(
-        product_id: UUID,
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency)
+    product_id: UUID,
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     """
     available for active users and superuser
     """
     product = await product_dal.get_by_id(product_id, only_is_active=False)
     if product is None:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND
-        )
+        raise HTTPException(status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND)
     await product_dal.delete(product)
 
 
@@ -208,14 +200,11 @@ async def delete_product(
     "/statistic/",
     response_model=List[ProductStatsResponse],
     dependencies=[Depends(get_current_active_user)],
-    responses={
-        **FORBIDDEN_RESPONSE,
-        **UNAUTHORIZED_RESPONSE
-    }
+    responses={**FORBIDDEN_RESPONSE, **UNAUTHORIZED_RESPONSE},
 )
 async def get_product_statistic(
-        product_dal: ProductDAL = Depends(ProductDAL.get_as_dependency),
-        payment_dal: PaymentDAL = Depends(PaymentDAL.get_as_dependency)
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
+    payment_dal: Annotated[PaymentDAL, Depends(PaymentDAL.get_as_dependency)],
 ):
     """
     available for active users and superuser
@@ -232,9 +221,7 @@ async def get_product_statistic(
     for product in products:
         statistic.append(
             ProductStatsResponse(
-                id=product.id,
-                name=product.name,
-                sold=count.get(product.name, 0)
+                id=product.id, name=product.name, sold=count.get(product.name, 0)
             )
         )
     return statistic
@@ -247,15 +234,15 @@ async def get_product_statistic(
     responses={
         **FORBIDDEN_RESPONSE,
         **UNAUTHORIZED_RESPONSE,
-        **PRODUCT_NOT_FOUND_RESPONSE
-    }
+        **PRODUCT_NOT_FOUND_RESPONSE,
+    },
 )
 async def send_manual_product(
-        product_id: Annotated[UUID, Query()],
-        email_to: Annotated[EmailStr, Query()],
-        product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
-        background_tasks: BackgroundTasks):
-
+    product_id: Annotated[UUID, Query()],
+    email_to: Annotated[EmailStr, Query()],
+    product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
+    background_tasks: BackgroundTasks,
+):
     product = await product_dal.get_by_id(product_id, only_is_active=True)
     if product is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, ProductError.NOT_FOUND)
@@ -264,6 +251,3 @@ async def send_manual_product(
     )
     background_tasks.add_task(email.send)
     return
-
-
-

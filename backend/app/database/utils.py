@@ -1,7 +1,11 @@
 import uuid
 
 from sqlalchemy import UUID, text
-from sqlalchemy.orm import declarative_mixin, Mapped, mapped_column
+from sqlalchemy.orm import (
+    Mapped,
+    declarative_mixin,
+    mapped_column,
+)
 
 
 @declarative_mixin
@@ -12,7 +16,7 @@ class UUIDMixin:
         default=uuid.uuid4,
         server_default=text("gen_random_uuid()"),
         nullable=False,
-        index=True
+        index=True,
     )
 
 

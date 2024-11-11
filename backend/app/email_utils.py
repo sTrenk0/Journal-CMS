@@ -1,10 +1,11 @@
-from typing import Dict, Any, Protocol
+import logging
+import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import smtplib
-import logging
-from jinja2 import Template
 from pathlib import Path
+
+from jinja2 import Template
+
 from .settings import config
 
 SMTP_HOST = "smtp.gmail.com"

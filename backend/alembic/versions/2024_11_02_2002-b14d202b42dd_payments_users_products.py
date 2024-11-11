@@ -8,9 +8,9 @@ Create Date: 2024-11-02 20:02:57.668411
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "b14d202b42dd"
@@ -27,9 +27,7 @@ def upgrade() -> None:
         sa.Column("source_product_url", sa.String(), nullable=False),
         sa.Column("description", sa.String(), nullable=True),
         sa.Column("preview_urls", sa.JSON(), nullable=False),
-        sa.Column(
-            "is_active", sa.Boolean(), server_default="true", nullable=False
-        ),
+        sa.Column("is_active", sa.Boolean(), server_default="true", nullable=False),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -62,12 +60,8 @@ def upgrade() -> None:
         "users",
         sa.Column("email", sa.String(), nullable=False),
         sa.Column("hashed_password", sa.String(), nullable=False),
-        sa.Column(
-            "is_active", sa.Boolean(), server_default="true", nullable=False
-        ),
-        sa.Column(
-            "is_superuser", sa.Boolean(), server_default="false", nullable=False
-        ),
+        sa.Column("is_active", sa.Boolean(), server_default="true", nullable=False),
+        sa.Column("is_superuser", sa.Boolean(), server_default="false", nullable=False),
         sa.Column(
             "id",
             sa.UUID(),
@@ -99,15 +93,11 @@ def upgrade() -> None:
             server_default=sa.text("gen_random_uuid()"),
             nullable=False,
         ),
-        sa.ForeignKeyConstraint(
-            ["product_id"], ["products.id"], ondelete="SET NULL"
-        ),
+        sa.ForeignKeyConstraint(["product_id"], ["products.id"], ondelete="SET NULL"),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(op.f("ix_payments_id"), "payments", ["id"], unique=False)
-    op.create_index(
-        op.f("ix_payments_invoice"), "payments", ["invoice"], unique=True
-    )
+    op.create_index(op.f("ix_payments_invoice"), "payments", ["invoice"], unique=True)
     op.create_index(
         op.f("ix_payments_product_id"), "payments", ["product_id"], unique=False
     )
@@ -135,9 +125,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("payment_id"),
     )
-    op.create_index(
-        op.f("ix_cancel_lists_id"), "cancel_lists", ["id"], unique=False
-    )
+    op.create_index(op.f("ix_cancel_lists_id"), "cancel_lists", ["id"], unique=False)
     op.create_table(
         "payments_info",
         sa.Column("maskedPan", sa.String(), nullable=False),
@@ -165,9 +153,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("payment_id"),
     )
-    op.create_index(
-        op.f("ix_payments_info_id"), "payments_info", ["id"], unique=False
-    )
+    op.create_index(op.f("ix_payments_info_id"), "payments_info", ["id"], unique=False)
     op.create_table(
         "tips_info",
         sa.Column("employeeId", sa.String(), nullable=False),
@@ -206,9 +192,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("payment_id"),
     )
-    op.create_index(
-        op.f("ix_wallets_data_id"), "wallets_data", ["id"], unique=False
-    )
+    op.create_index(op.f("ix_wallets_data_id"), "wallets_data", ["id"], unique=False)
     # ### end Alembic commands ###
 
 

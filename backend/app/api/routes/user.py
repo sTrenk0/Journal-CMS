@@ -1,27 +1,31 @@
-from uuid import UUID
 from typing import Annotated, List
+from uuid import UUID
+
 from fastapi import (
-    APIRouter, Depends, HTTPException, status
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
 )
 
+from app.auth.deps import get_current_active_superuser, get_current_active_user
 from app.auth.errors import AuthError
+from app.auth.hash import Hasher
+from app.auth.openapi_responses import FORBIDDEN_RESPONSE, UNAUTHORIZED_RESPONSE
+from app.settings import config
+from app.user.dal import UserDAL
+from app.user.errors import UserError
+from app.user.models import UserModel
 from app.user.openapi_responses import (
     USER_ALREADY_EXISTS_RESPONSE,
     USER_NOT_FOUND_RESPONSE,
     USER_WITH_THIS_EMAIL_ALREADY_EXISTS_RESPONSE,
 )
-from app.auth.openapi_responses import FORBIDDEN_RESPONSE, UNAUTHORIZED_RESPONSE
 from app.user.schemas import (
-    UserResponse, CreateUser, UpdateUser
+    CreateUser,
+    UpdateUser,
+    UserResponse,
 )
-from app.auth.deps import (
-    get_current_active_user, get_current_active_superuser
-)
-from app.user.models import UserModel
-from app.user.dal import UserDAL
-from app.auth.hash import Hasher
-from app.user.errors import UserError
-from app.settings import config
 
 user_router = APIRouter()
 
@@ -32,14 +36,13 @@ user_router = APIRouter()
     responses={
         **USER_ALREADY_EXISTS_RESPONSE,
         **FORBIDDEN_RESPONSE,
-        **UNAUTHORIZED_RESPONSE
+        **UNAUTHORIZED_RESPONSE,
     },
     dependencies=[Depends(get_current_active_superuser)],
-    status_code=status.HTTP_201_CREATED
+    status_code=status.HTTP_201_CREATED,
 )
 async def add_user(
-        body: CreateUser,
-        user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]
+    body: CreateUser, user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]
 ):
     """
     Available for superuser
@@ -48,8 +51,7 @@ async def add_user(
     user = await user_dal.get_by_email(email=body.email)
     if user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=UserError.ALREADY_EXISTS
+            status_code=status.HTTP_400_BAD_REQUEST, detail=UserError.ALREADY_EXISTS
         )
 
     hashed_password = Hasher.get_password_hash(create_user_data.pop("password"))
@@ -65,12 +67,11 @@ async def add_user(
     responses={
         **USER_NOT_FOUND_RESPONSE,
         **FORBIDDEN_RESPONSE,
-        **UNAUTHORIZED_RESPONSE
-    }
+        **UNAUTHORIZED_RESPONSE,
+    },
 )
 async def delete_user(
-        user_id: UUID,
-        user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]
+    user_id: UUID, user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]
 ):
     """
     Available for superuser
@@ -78,24 +79,18 @@ async def delete_user(
     user = await user_dal.get_by_id(user_id)
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=UserError.NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND, detail=UserError.NOT_FOUND
         )
     if user.email == config.app_initial_superuser_email:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=AuthError.FORBIDDEN
+            status_code=status.HTTP_403_FORBIDDEN, detail=AuthError.FORBIDDEN
         )
     await user_dal.delete(user)
     return
 
 
 @user_router.get(
-    "/me",
-    response_model=UserResponse,
-    responses={
-        **UNAUTHORIZED_RESPONSE
-    }
+    "/me", response_model=UserResponse, responses={**UNAUTHORIZED_RESPONSE}
 )
 async def get_me(user: Annotated[UserModel, Depends(get_current_active_user)]):
     """
@@ -111,12 +106,11 @@ async def get_me(user: Annotated[UserModel, Depends(get_current_active_user)]):
     responses={
         **FORBIDDEN_RESPONSE,
         **UNAUTHORIZED_RESPONSE,
-        **USER_NOT_FOUND_RESPONSE
-    }
+        **USER_NOT_FOUND_RESPONSE,
+    },
 )
 async def get_user(
-        user_id: UUID,
-        user_dal: Annotated[UserDAL,Depends(UserDAL.get_as_dependency)]
+    user_id: UUID, user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]
 ):
     """
     Available for superuser
@@ -124,8 +118,7 @@ async def get_user(
     user = await user_dal.get_by_id(user_id)
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=UserError.NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND, detail=UserError.NOT_FOUND
         )
     return user
 
@@ -134,10 +127,7 @@ async def get_user(
     "/",
     response_model=List[UserResponse],
     dependencies=[Depends(get_current_active_superuser)],
-    responses={
-        **FORBIDDEN_RESPONSE,
-        **UNAUTHORIZED_RESPONSE
-    }
+    responses={**FORBIDDEN_RESPONSE, **UNAUTHORIZED_RESPONSE},
 )
 async def get_users(user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)]):
     """
@@ -155,13 +145,13 @@ async def get_users(user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependen
         **FORBIDDEN_RESPONSE,
         **UNAUTHORIZED_RESPONSE,
         **USER_NOT_FOUND_RESPONSE,
-        **USER_WITH_THIS_EMAIL_ALREADY_EXISTS_RESPONSE
+        **USER_WITH_THIS_EMAIL_ALREADY_EXISTS_RESPONSE,
     },
 )
 async def update_user(
-        body: UpdateUser,
-        user_id: UUID,
-        user_dal: Annotated[UserDAL,Depends(UserDAL.get_as_dependency)]
+    body: UpdateUser,
+    user_id: UUID,
+    user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)],
 ):
     """
     available for superuser
@@ -169,14 +159,12 @@ async def update_user(
     user = await user_dal.get_by_id(user_id)
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=UserError.NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND, detail=UserError.NOT_FOUND
         )
 
     if user.email == config.app_initial_superuser_email:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=AuthError.FORBIDDEN
+            status_code=status.HTTP_403_FORBIDDEN, detail=AuthError.FORBIDDEN
         )
 
     if body.email is not None and user.email != body.email:
@@ -184,7 +172,7 @@ async def update_user(
         if user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=UserError.EMAIL_ALREADY_EXISTS
+                detail=UserError.EMAIL_ALREADY_EXISTS,
             )
 
     kwargs = {}

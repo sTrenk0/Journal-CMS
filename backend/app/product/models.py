@@ -1,10 +1,20 @@
 import datetime
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
-from sqlalchemy import DateTime, text, UniqueConstraint, JSON
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy import (
+    JSON,
+    DateTime,
+    UniqueConstraint,
+    text,
+)
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    relationship,
+)
+
 from app.database.core import Base
-from app.database.utils import UUIDMixin, InitMixin
+from app.database.utils import InitMixin, UUIDMixin
 
 if TYPE_CHECKING:
     from app.payment.models import PaymentModel
@@ -12,22 +22,12 @@ if TYPE_CHECKING:
 
 class ProductModel(UUIDMixin, InitMixin, Base):
     __tablename__ = "products"
-    name: Mapped[str] = mapped_column(
-        nullable=False, unique=True
-    )
-    source_product_url: Mapped[str] = mapped_column(
-        nullable=False, unique=True
-    )
-    description: Mapped[str] = mapped_column(
-        nullable=True
-    )
-    preview_urls: Mapped[list[str]] = mapped_column(
-        JSON, nullable=False
-    )
+    name: Mapped[str] = mapped_column(nullable=False, unique=True)
+    source_product_url: Mapped[str] = mapped_column(nullable=False, unique=True)
+    description: Mapped[str] = mapped_column(nullable=True)
+    preview_urls: Mapped[list[str]] = mapped_column(JSON, nullable=False)
     is_active: Mapped[bool] = mapped_column(
-        default=True,
-        server_default="true",
-        nullable=False
+        default=True, server_default="true", nullable=False
     )
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
@@ -40,7 +40,7 @@ class ProductModel(UUIDMixin, InitMixin, Base):
         default=datetime.datetime.now(datetime.timezone.utc),
         nullable=False,
         server_default=text("now()"),
-        onupdate=text("now()")
+        onupdate=text("now()"),
     )
 
     payments: Mapped[List["PaymentModel"]] = relationship(
@@ -50,8 +50,9 @@ class ProductModel(UUIDMixin, InitMixin, Base):
     )
     __table_args__ = (
         UniqueConstraint(
-            'name', 'source_product_url',
-            name='unique_name_source_product_url_constraint'
+            "name",
+            "source_product_url",
+            name="unique_name_source_product_url_constraint",
         ),
     )
 

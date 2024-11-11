@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.core import router
 from app.database.initial import create_initial_superuser
-from app.settings import config
 from app.exception_handlers import http_exception_internal_handler
+from app.settings import config
 
 
 def create_configured_app() -> FastAPI:
