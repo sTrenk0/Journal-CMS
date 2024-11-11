@@ -1,10 +1,10 @@
-from datetime import datetime
+# from datetime import datetime
 from fastapi.responses import JSONResponse
 
-from .email_utils import InternalErrorEmailTemplate
-from .settings import config
-import traceback
-import pytz
+# from .email_utils import InternalErrorEmailTemplate
+# from .settings import config
+# import traceback
+# import pytz
 
 
 async def http_exception_internal_handler(request, exc: Exception):
