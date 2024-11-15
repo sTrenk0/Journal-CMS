@@ -36,7 +36,7 @@ def check_on_data_relevance(
 ) -> bool:
     requested_modified_date = datetime.fromisoformat(requested_modified_date)
     stored_modified_date = datetime.fromisoformat(stored_modified_date)
-    if requested_modified_date > stored_modified_date:
+    if requested_modified_date >= stored_modified_date:
         return True
 
     return False
