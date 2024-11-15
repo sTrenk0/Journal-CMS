@@ -23,11 +23,12 @@ python-multipart = "^0.0.17"
 uvicorn = "0.32.0"
 pytz = "2024.2"
 isort = "5.13.2"
+alembic = "^1.13.3"
+
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.2"
 black = "^24.8.0"
-alembic = "^1.13.3"
 pytest-mock = "^3.14.0"
 mypy = "^1.13.0"
 ruff = "^0.7.3"
