@@ -8,6 +8,47 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 function Post() {
+  interface Discount {
+    type: string;
+    mode: string;
+    value: number;
+  }
+
+  interface BasketOrder {
+    name: string;
+    qty: number;
+    sum: number;
+    total: number;
+    icon: string;
+    unit: string;
+    code: string;
+    barcode: string;
+    header: string;
+    footer: string;
+    tax: unknown[]; // Assuming tax is an array of unknown items
+    uktzed: string;
+    discounts: Discount[];
+  }
+
+  interface MerchantPaymInfo {
+    reference: string;
+    destination: string;
+    comment: string;
+    customerEmails: string[];
+    basketOrder: BasketOrder[];
+  }
+
+  interface PaymentRequestBody {
+    amount: number;
+    ccy: number;
+    merchantPaymInfo: MerchantPaymInfo;
+    redirectUrl: string;
+    webHookUrl: string;
+    validity: number;
+    paymentType: string;
+    agentFeePercent: number;
+  }
+
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate(); // Use the useNavigate hook
 
@@ -22,11 +63,94 @@ function Post() {
     created_at: string;
     updated_at: string;
   }
-
   const [data, setData] = useState<ProductInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [mainImage, setMainImage] = useState<string | null>(null);
+  const [donationAmmount, setDonationAmmount] = useState<number>(0);
+  const [clientEmail, setClientEmail] = useState<string>("");
+  const webHookUrl: string = import.meta.env.VITE_WEB_HOOK_URL;
+  const monoXToken: string = import.meta.env.VITE_TOKEN;
+  const domainName: string = import.meta.env.VITE_DOMAIN_NAME;
+
+  function removeLastTwoZeros(num: number) {
+    return parseInt(num.toString().replace(/00$/, ""), 10);
+  }
+
+  const timestamp = new Date().toISOString();
+
+  const requestBody: PaymentRequestBody = {
+    amount: donationAmmount,
+    ccy: 980,
+    merchantPaymInfo: {
+      reference: "84d0070ee4e44667b31371d8f8813941237",
+      destination: "Покупка щастя",
+      comment: "Покупка щастя",
+      customerEmails: [],
+      basketOrder: [
+        {
+          name: "К. Фланер",
+          qty: 1,
+          sum: donationAmmount,
+          total: donationAmmount,
+          icon: "string",
+          unit: "шт.",
+          code: "d21da1c47f3c45fca10a10c32518bdeb",
+          barcode: "string",
+          header: "string",
+          footer: "string",
+          tax: [],
+          uktzed: "string",
+          discounts: [
+            {
+              type: "DISCOUNT",
+              mode: "PERCENT",
+              value: 0.01,
+            },
+          ],
+        },
+      ],
+    },
+    redirectUrl: `${domainName}paymentsuccess?amount=${removeLastTwoZeros(
+      donationAmmount
+    )}&email=${clientEmail}&time=${timestamp}`,
+    webHookUrl: `${webHookUrl}/api/v1/payments/hook?product_id=${id}&customer_email=${clientEmail}`,
+    validity: 3600,
+    paymentType: "debit",
+    agentFeePercent: 1.42,
+  };
+
+  const makePaymentRequest = async (): Promise<void> => {
+    console.log("URL:", webHookUrl);
+    console.log("Request Body:", requestBody);
+    try {
+      const response = await axios.post(
+        "https://api.monobank.ua/api/merchant/invoice/create",
+        requestBody,
+        {
+          headers: {
+            "X-Token": monoXToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const pageUrl = response.data.pageUrl;
+      if (pageUrl) {
+        window.location.href = pageUrl;
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error response:", error.response?.data);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+  };
+  const getButtonClass = (value: number) => {
+    return donationAmmount === value
+      ? "border-2 border-gray-500 shadow-lg shadow-gray-500/50 rounded-full"
+      : "rounded-full";
+  };
 
   useEffect(() => {
     // Fetching data from API using axios
@@ -192,21 +316,43 @@ function Post() {
                       </div>
                     </div>
                   </div>
-
                   <div className="text-center mt-16">
-                    <p className="not-italic font-bold text-[36px] leading-[49px] text-[#8AA3B6]">
-                      Оберіть суму внеску
-                    </p>
-                    <div className="mt-6 flex justify-center gap-14">
-                      <button>
-                        <img src={IMAGES.seventy_uah} alt="70 UAH" />
-                      </button>
-                      <button>
-                        <img src={IMAGES.hundered_uah} alt="100 UAH" />
-                      </button>
-                      <button>
-                        <img src={IMAGES.hundered_fifity_uah} alt="150 UAH" />
-                      </button>
+                    <div className="text-center mt-16">
+                      <p className="not-italic font-bold text-[36px] leading-[49px] text-[#8AA3B6]">
+                        Оберіть суму внеску
+                      </p>
+                      <div className="mt-6 flex justify-center gap-14">
+                        <button
+                          onClick={() => setDonationAmmount(7000)}
+                          className={getButtonClass(7000)}
+                        >
+                          <img
+                            src={IMAGES.seventy_uah}
+                            alt="70 UAH"
+                            className="rounded-full"
+                          />
+                        </button>
+                        <button
+                          onClick={() => setDonationAmmount(10000)}
+                          className={getButtonClass(10000)}
+                        >
+                          <img
+                            src={IMAGES.hundered_uah}
+                            alt="100 UAH"
+                            className="rounded-full"
+                          />
+                        </button>
+                        <button
+                          onClick={() => setDonationAmmount(15000)}
+                          className={getButtonClass(15000)}
+                        >
+                          <img
+                            src={IMAGES.hundered_fifity_uah}
+                            alt="150 UAH"
+                            className="rounded-full"
+                          />
+                        </button>
+                      </div>
                     </div>
 
                     <div className="flex justify-center mt-7">
@@ -217,10 +363,13 @@ function Post() {
                           id="email"
                           className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-5 p-2.5"
                           placeholder="mail@gmail.com"
+                          value={clientEmail}
+                          onChange={(e) => setClientEmail(e.target.value)}
                         />
                         <button
                           className=" mt-8 rounded-lg bg-slate-800 py-3 px-6 border border-transparent text-center text-pretty text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
                           type="button"
+                          onClick={() => makePaymentRequest()}
                         >
                           До оплати
                         </button>

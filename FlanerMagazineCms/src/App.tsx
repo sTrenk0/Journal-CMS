@@ -13,6 +13,8 @@ import Post from "./pages/Post/Post.tsx";
 import NotFound from "./pages/NotFound/404.tsx";
 import LoginForm from "./components/Login/Login.tsx";
 import Dashboard from "./pages/Protected/Dashboard/Dashboard.tsx";
+import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess.tsx";
+import PasswordRecovery from "./pages/PasswordRecovery/PasswordRecovery.tsx";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
           <Route path="404" element={<NotFound />} />
           <Route path="panel/admin/login" element={<LoginForm />} />
           <Route path="panel/admin/" element={<Dashboard />} />
+          <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+          <Route path="/passwordrecovery" element={<PasswordRecovery />} />
         </Routes>
       </BrowserRouter>
     </>

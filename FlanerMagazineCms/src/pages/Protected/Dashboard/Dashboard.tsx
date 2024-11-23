@@ -20,9 +20,9 @@ import UserAccount from "./DashboardCompoenents/UserAccount";
 import ManualProduct from "./DashboardCompoenents/ManualProduct";
 import User from "./DashboardCompoenents/User";
 import Posts from "./DashboardCompoenents/Posts";
+import PaymentHistory from "./DashboardCompoenents/PaymentHistory";
 
 // Example components for different tabs
-const PaymentHistoryComponent = () => <div>Payment History Content</div>;
 const PasswordRecovery = () => <div>Password Recovery Content</div>;
 
 export interface MeUser {
@@ -89,7 +89,7 @@ const Dashboard: React.FC = () => {
       case "manualProducts":
         return <ManualProduct />;
       case "paymentHistory":
-        return <PaymentHistoryComponent />;
+        return <PaymentHistory />;
       case "PasswordRecovery":
         return <PasswordRecovery />;
       default:
@@ -140,12 +140,14 @@ const Dashboard: React.FC = () => {
             active={selectedTab === "paymentHistory"}
             onClick={() => setSelectedTab("paymentHistory")}
           />
-          <SidebarItem
-            icon={<KeyRound size={20} />}
-            text="Password Recovery"
-            active={selectedTab === "PasswordRecovery"}
-            onClick={() => setSelectedTab("PasswordRecovery")}
-          />
+          <Link to={"/passwordrecovery"}>
+            <SidebarItem
+              icon={<KeyRound size={20} />}
+              text="Password Recovery"
+              active={selectedTab === "PasswordRecovery"}
+              onClick={() => setSelectedTab("PasswordRecovery")}
+            />
+          </Link>
           <hr className="my-3" />
 
           <Link to={"https://t.me/classssick"}>
