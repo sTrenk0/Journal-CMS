@@ -12,7 +12,7 @@ from app.user.dal import UserDAL
 from app.user.models import UserModel
 
 from .hash import Hasher
-from .transport import COOKIE_MAX_AGE
+
 
 SECRET = config.app_jwt_secret
 
@@ -35,7 +35,9 @@ def create_access_token(email: str, expires_delta: Optional[timedelta] = None) -
     if expires_delta is not None:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(seconds=COOKIE_MAX_AGE)
+        expire = datetime.now(timezone.utc) + timedelta(
+            seconds=config.app_cookie_age_seconds
+        )
     to_encode["exp"] = expire
     encoded_jwt = jwt.encode(to_encode, SECRET, algorithm="HS256")
     return encoded_jwt

@@ -10,10 +10,10 @@ from fastapi import (
 
 from app.user.dal import UserDAL
 from app.user.models import UserModel
+from app.settings import config
 
 from .auntification import verify_access_token
 from .errors import AuthError
-from .transport import COOKIE_NAME
 
 
 async def authorize_user(
@@ -48,7 +48,7 @@ async def authorize_user(
 
 
 async def get_current_active_user(
-    token: Annotated[str, Cookie(alias=COOKIE_NAME)],
+    token: Annotated[str, Cookie(alias=config.app_cookie_age_seconds)],
     user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)],
 ) -> UserModel:
     """
@@ -63,7 +63,7 @@ async def get_current_active_user(
 
 
 async def get_current_active_superuser(
-    token: Annotated[str, Cookie(alias=COOKIE_NAME)],
+    token: Annotated[str, Cookie(alias=config.app_cookie_age_seconds)],
     user_dal: Annotated[UserDAL, Depends(UserDAL.get_as_dependency)],
 ) -> UserModel:
     """
