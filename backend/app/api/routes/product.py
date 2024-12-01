@@ -92,7 +92,7 @@ async def get_only_active_products(
     product_dal: Annotated[ProductDAL, Depends(ProductDAL.get_as_dependency)],
 ):
     products = await product_dal.get_all(only_is_active=True)
-    return list(map(ProductPublicResponse.model_validate, products))
+    return products
 
 
 @admin_product_router.get(
