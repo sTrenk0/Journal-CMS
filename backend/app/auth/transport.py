@@ -5,19 +5,15 @@ from fastapi import Response, status
 from fastapi.security import APIKeyCookie
 
 from app.openapi_type import OpenAPIResponseType
-
-COOKIE_MAX_AGE = 60 * 60 * 24 * 3
-COOKIE_PATH = "/"
-COOKIE_DOMAIN = "localhost"
-COOKIE_NAME = "token"
+from app.settings import config
 
 
 class CookieTransport:
-    cookie_name: str = COOKIE_NAME
+    cookie_name: str = "token"
     scheme: APIKeyCookie = APIKeyCookie(name=cookie_name, auto_error=False)
-    cookie_max_age: Optional[int] = COOKIE_MAX_AGE
-    cookie_path: str = COOKIE_PATH
-    cookie_domain: Optional[str] = COOKIE_DOMAIN
+    cookie_max_age: Optional[int] = config.app_cookie_age_seconds
+    cookie_path: str = "/"
+    cookie_domain: Optional[str] = config.app_site_domain
     cookie_secure: bool = True
     cookie_httponly: bool = True
     cookie_samesite: Literal["lax", "strict", "none"] = "strict"
