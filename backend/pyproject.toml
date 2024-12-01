@@ -9,7 +9,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.12"
 sqlalchemy = { version = "^2.0.36", extras = ["asyncio"] }
-fastapi = { version = "^0.100.0", extras = ["standard"] }
+fastapi = { version = ">=0.100.0, <0.101.0", extras = ["standard"] }
 psycopg2-binary = "^2.9.9"
 pydantic_settings = "^2.5.2"
 redis = "^5.1.1"
