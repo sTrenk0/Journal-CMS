@@ -86,7 +86,6 @@ async def delete_user(
             status_code=status.HTTP_403_FORBIDDEN, detail=AuthError.FORBIDDEN
         )
     await user_dal.delete(user)
-    return
 
 
 @user_router.get(

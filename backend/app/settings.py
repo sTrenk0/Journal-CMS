@@ -14,7 +14,7 @@ class _Config(BaseSettings):
         env_file_encoding="utf-8",
     )
     api_version: ClassVar = "v1"
-    project_name: str = "Journal-CMS"
+    _launch_option: Literal["local", "docker"] = "local"
     app_site_domain: str = "Journal-CMS"
     app_jwt_secret: str
     app_cookie_age_seconds: int

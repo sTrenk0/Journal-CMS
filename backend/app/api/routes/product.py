@@ -250,4 +250,3 @@ async def send_manual_product(
         email_to=email_to, source_product_url=product.source_product_url
     )
     background_tasks.add_task(email.send)
-    return

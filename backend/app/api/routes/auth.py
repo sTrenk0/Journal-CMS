@@ -92,8 +92,6 @@ async def request_forgot_password(
         background_tasks.add_task(email.send)
         return
 
-    return
-
 
 @auth_router.post(
     "/recovery-password",
@@ -120,4 +118,3 @@ async def recovery_password(
         user,
         hashed_password=Hasher.get_password_hash(new_password),
     )
-    return
