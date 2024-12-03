@@ -8,12 +8,12 @@ services:
     ports:
       - "3000:80"
     restart: always
-    network_mode: host
+    networks:
+      - local
 
   postgres:
     hostname: "${POSTGRES_HOST_NAME}"
     container_name: "${POSTGRES_HOST_NAME}"
-    restart: on-failure
     image: postgres:16
     environment:
       POSTGRES_PORT: ${POSTGRES_PORT}
@@ -24,7 +24,6 @@ services:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - "postgres_data:/var/lib/postgresql/data"
-      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
     networks:
       - local
     healthcheck:
@@ -45,42 +44,33 @@ services:
     networks:
       - local
 
-python:
-  hostname: "${APP_HOST_NAME}"
-  container_name: "${APP_HOST_NAME}"
-  build:
-    context: ./backend/
-    dockerfile: Dockerfile-python
-  depends_on:
-    postgres:
-      condition: service_healthy
-    redis:
-      condition: service_started
-  environment:
-    POSTGRES_HOST_NAME: ${POSTGRES_HOST_NAME}
-    POSTGRES_PORT: ${POSTGRES_PORT}
-    POSTGRES_USER: ${POSTGRES_USER}
-    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    POSTGRES_DB: ${POSTGRES_DB}
-    APP_PORT: ${APP_PORT}
-    APP_INITIAL_SUPERUSER_EMAIL: ${APP_INITIAL_SUPERUSER_EMAIL}
-    APP_INITIAL_SUPERUSER_PASSWORD: ${APP_INITIAL_SUPERUSER_PASSWORD}
-    SENDER_EMAIL: ${SENDER_EMAIL}
-    CLIENT_EMAIL_PASSWORD: ${CLIENT_EMAIL_PASSWORD}
-    REDIS_HOST_NAME: ${REDIS_HOST_NAME}
-    REDIS_PORT: ${REDIS_PORT}
-    REDIS_PASSWORD: ${REDIS_PASSWORD}
-    MONOBANK_PUB_KEY: ${MONOBANK_PUB_KEY}
-  ports:
-    - "8000:8000"
-  networks:
-    - local
+  python:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile-python
+    environment:
+      POSTGRES_HOST_NAME: ${POSTGRES_HOST_NAME}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      APP_PORT: ${APP_PORT}
+      APP_INITIAL_SUPERUSER_EMAIL: ${APP_INITIAL_SUPERUSER_EMAIL}
+      APP_INITIAL_SUPERUSER_PASSWORD: ${APP_INITIAL_SUPERUSER_PASSWORD}
+      SENDER_EMAIL: ${SENDER_EMAIL}
+      CLIENT_EMAIL_PASSWORD: ${CLIENT_EMAIL_PASSWORD}
+      REDIS_HOST_NAME: ${REDIS_HOST_NAME}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      MONOBANK_PUB_KEY: ${MONOBANK_PUB_KEY}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    networks:
+      - local
 
 volumes:
   postgres_data:
-    driver: local
   redis_data:
-    driver: local
 
 networks:
   local:
