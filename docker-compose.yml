@@ -1,4 +1,14 @@
+version: "3.8"
+
 services:
+  app:
+    build:
+      context: FlanerMagazineCms
+      dockerfile: ./FlanerMagazineCms/Dockerfile
+    ports:
+      - "3000:80"
+    restart: always
+
   postgres:
     hostname: "${POSTGRES_HOST_NAME}"
     container_name: "${POSTGRES_HOST_NAME}"
@@ -40,7 +50,7 @@ services:
     container_name: "${APP_HOST_NAME}"
     build:
       context: .
-      dockerfile: ./Dockerfile-python
+      dockerfile: ./backend/Dockerfile-python
     depends_on:
       postgres:
         condition: service_healthy
@@ -76,3 +86,4 @@ volumes:
 networks:
   local:
     driver: bridge
+
