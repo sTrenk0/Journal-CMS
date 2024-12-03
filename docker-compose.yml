@@ -8,6 +8,7 @@ services:
     ports:
       - "3000:80"
     restart: always
+    network_mode: host
 
   postgres:
     hostname: "${POSTGRES_HOST_NAME}"
@@ -86,4 +87,6 @@ volumes:
 networks:
   local:
     driver: bridge
+
+
 
