@@ -3,8 +3,8 @@ version: "3.8"
 services:
   app:
     build:
-      context: FlanerMagazineCms
-      dockerfile: ./FlanerMagazineCms/Dockerfile
+      context: ./FlanerMagazineCms/
+      dockerfile: Dockerfile
     ports:
       - "3000:80"
     restart: always
@@ -50,8 +50,8 @@ services:
     hostname: "${APP_HOST_NAME}"
     container_name: "${APP_HOST_NAME}"
     build:
-      context: .
-      dockerfile: ./backend/Dockerfile-python
+      context: ./backend/
+      dockerfile: Dockerfile-python
     depends_on:
       postgres:
         condition: service_healthy
