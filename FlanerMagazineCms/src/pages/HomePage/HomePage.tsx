@@ -30,7 +30,7 @@ function HomePage() {
   useEffect(() => {
     // Fetching data from API using axios
     axios
-      .get<PreviewUrls[]>("http://python:8000/api/v1/products")
+      .get<PreviewUrls[]>("http://python-app:8000/api/v1/products")
       .then((response) => {
         setData(response.data); // Store API data in state
         setLoading(false); // Stop loading
