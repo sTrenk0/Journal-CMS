@@ -19,9 +19,12 @@ const UsersTable = () => {
 
   useEffect(() => {
     axios
-      .get<UserModel[]>("http://localhost:8000/api/v1/admin/users/", {
-        withCredentials: true,
-      })
+      .get<UserModel[]>(
+        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/admin/users/`,
+        {
+          withCredentials: true,
+        }
+      )
       .then((response) => {
         setUserData(response.data);
       })
@@ -35,7 +38,9 @@ const UsersTable = () => {
       try {
         console.log("Deleting user with ID:", deleteUserId);
         await axios.delete(
-          `http://localhost:8000/api/v1/admin/users/${deleteUserId}`,
+          `${
+            import.meta.env.VITE_DOMAIN_NAME
+          }api/v1/admin/users/${deleteUserId}`,
           { withCredentials: true }
         );
 

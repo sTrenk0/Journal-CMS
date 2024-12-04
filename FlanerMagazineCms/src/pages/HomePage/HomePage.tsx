@@ -30,7 +30,7 @@ function HomePage() {
   useEffect(() => {
     // Fetching data from API using axios
     axios
-      .get<PreviewUrls[]>("/api/v1/products")
+      .get<PreviewUrls[]>(`${import.meta.env.VITE_DOMAIN_NAME}api/v1/products`)
       .then((response) => {
         setData(response.data); // Store API data in state
         setLoading(false); // Stop loading

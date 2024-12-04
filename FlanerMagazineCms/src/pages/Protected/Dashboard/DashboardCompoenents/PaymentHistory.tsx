@@ -40,7 +40,9 @@ const PaymentHistory: React.FC = () => {
 
   useEffect(() => {
     const fetchPaymentInfo = async () => {
-      const apiUrl = "http://localhost:8000/api/v1/admin/payments/";
+      const apiUrl = `${
+        import.meta.env.VITE_DOMAIN_NAME
+      }api/v1/admin/payments/`;
       try {
         const response: AxiosResponse<PaymentInfo[]> = await axios.get(apiUrl, {
           withCredentials: true,
@@ -110,7 +112,8 @@ const PaymentHistory: React.FC = () => {
                       to={`http://localhost:5173/post/${info.product_id}`}
                       className="text-sky-700 hover:text-sky-500"
                     >
-                      http://localhost:5173/post/{info.product_id.slice(0, 6)}
+                      {import.meta.env.VITE_DOMAIN_NAME}post/
+                      {info.product_id.slice(0, 6)}
                     </Link>
                   </td>
                 </tr>

@@ -33,9 +33,12 @@ const PostList: FC = () => {
 
   useEffect(() => {
     axios
-      .get<Posts[]>("http://localhost:8000/api/v1/admin/products/", {
-        withCredentials: true,
-      })
+      .get<Posts[]>(
+        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/admin/products/`,
+        {
+          withCredentials: true,
+        }
+      )
       .then((response) => {
         setPostData(response.data);
       })
@@ -47,7 +50,9 @@ const PostList: FC = () => {
   const handleEditClick = async (productId: string) => {
     try {
       const response = await axios.get<Posts>(
-        `http://localhost:8000/api/v1/admin/products/id/${productId}`,
+        `${
+          import.meta.env.VITE_DOMAIN_NAME
+        }api/v1/admin/products/id/${productId}`,
         { withCredentials: true }
       );
       const productData = response.data;
@@ -70,7 +75,9 @@ const PostList: FC = () => {
     if (editingProduct) {
       try {
         await axios.patch(
-          `http://localhost:8000/api/v1/admin/products/${editingProduct.id}`,
+          `${import.meta.env.VITE_DOMAIN_NAME}api/v1/admin/products/${
+            editingProduct.id
+          }`,
           {
             name,
             source_product_url: sourceProductUrl,
@@ -111,7 +118,9 @@ const PostList: FC = () => {
     if (deleteUserId) {
       try {
         await axios.delete(
-          `http://localhost:8000/api/v1/admin/products/${deleteUserId}`,
+          `${
+            import.meta.env.VITE_DOMAIN_NAME
+          }api/v1/admin/products/${deleteUserId}`,
           { withCredentials: true }
         );
 

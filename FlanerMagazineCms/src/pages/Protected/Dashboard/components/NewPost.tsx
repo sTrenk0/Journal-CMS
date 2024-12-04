@@ -37,7 +37,7 @@ const NewPost: FC = () => {
     try {
       console.log(postData);
       await axios.post(
-        "http://localhost:8000/api/v1/admin/products/",
+        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/admin/products/`,
         postData,
         {
           withCredentials: true,
