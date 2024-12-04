@@ -26,9 +26,7 @@ function NewPassword() {
 
     try {
       const response = await axios.post(
-        `http://${
-          import.meta.env.VITE_DOMAIN_NAME
-        }api/v1/auth/recovery-password`,
+        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/auth/recovery-password`,
         data,
         {
           headers: {
