@@ -8,6 +8,20 @@ services:
     ports:
       - "3000:80"
     restart: always
+    networks:
+      - host
+
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80" # Пробросим 80 порт хоста на 80 порт контейнера
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf # Подключим конфигурационный файл
+    depends_on:
+      - python # Убедимся, что Python-сервис запущен до NGINX
+    restart: always
     network_mode: host
 
   postgres:
