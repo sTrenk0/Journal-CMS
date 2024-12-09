@@ -6,8 +6,8 @@ services:
       context: ./FlanerMagazineCms/
       dockerfile: Dockerfile
     restart: always
-    networks:
-      - host
+    network_mode: host
+
 
 
   nginx:
