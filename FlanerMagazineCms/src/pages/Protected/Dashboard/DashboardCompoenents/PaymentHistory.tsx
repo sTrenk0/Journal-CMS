@@ -40,7 +40,7 @@ const PaymentHistory: React.FC = () => {
 
   useEffect(() => {
     const fetchPaymentInfo = async () => {
-      const apiUrl = `http://localhost:8000/api/v1/admin/payments/`;
+      const apiUrl = `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/payments/`;
       try {
         const response: AxiosResponse<PaymentInfo[]> = await axios.get(apiUrl, {
           withCredentials: true,

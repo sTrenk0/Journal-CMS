@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
   const checkAuthorization = async () => {
     try {
       const meUser = await axios.get(
-        `http://localhost:8000/api/v1/admin/users/me`,
+        `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/users/me`,
         {
           withCredentials: true,
         }

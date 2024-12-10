@@ -30,7 +30,9 @@ function HomePage() {
   useEffect(() => {
     // Fetching data from API using axios
     axios
-      .get<PreviewUrls[]>(`http://localhost:8000/api/v1/products`)
+      .get<PreviewUrls[]>(
+        `https://5230-159-100-101-189.ngrok-free.app/api/v1/products`
+      )
       .then((response) => {
         setData(response.data); // Store API data in state
         setLoading(false); // Stop loading

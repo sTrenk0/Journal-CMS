@@ -155,7 +155,9 @@ function Post() {
   useEffect(() => {
     // Fetching data from API using axios
     axios
-      .get<ProductInfo>(`http://localhost:8000/api/v1/products/id/${id}/`)
+      .get<ProductInfo>(
+        `https://5230-159-100-101-189.ngrok-free.app/api/v1/products/id/${id}/`
+      )
       .then((response) => {
         setData(response.data); // Store API data in state
         setLoading(false); // Stop loading

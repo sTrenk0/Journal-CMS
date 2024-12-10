@@ -16,7 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
   const login = async () => {
     try {
       await axios.post(
-        `http://localhost:8000/api/v1/auth/logout`,
+        `https://5230-159-100-101-189.ngrok-free.app/api/v1/auth/logout`,
         {},
         {
           withCredentials: true,

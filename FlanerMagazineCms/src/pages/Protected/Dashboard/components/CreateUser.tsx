@@ -39,9 +39,13 @@ const CreateUser: FC = () => {
     console.log("User Data:", userData);
 
     try {
-      axios.post(`http://localhost:8000/api/v1/admin/users/`, userData, {
-        withCredentials: true,
-      });
+      axios.post(
+        `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/users/`,
+        userData,
+        {
+          withCredentials: true,
+        }
+      );
       toast.success("User created successfully");
     } catch (error) {
       console.log(error);
