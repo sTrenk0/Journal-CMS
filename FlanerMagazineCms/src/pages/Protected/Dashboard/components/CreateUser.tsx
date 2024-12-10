@@ -40,7 +40,7 @@ const CreateUser: FC = () => {
 
     try {
       axios.post(
-        `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/users/`,
+        `https://f02c-159-100-101-189.ngrok-free.app/api/v1/admin/users/`,
         userData,
         {
           withCredentials: true,

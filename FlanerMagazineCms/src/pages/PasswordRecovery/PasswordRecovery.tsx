@@ -17,7 +17,7 @@ function PasswordRecovery() {
 
     try {
       await axios.post(
-        `https://5230-159-100-101-189.ngrok-free.app/api/v1/auth/forgot-password?email=${email}`
+        `https://f02c-159-100-101-189.ngrok-free.app/api/v1/auth/forgot-password?email=${email}`
       );
       toast.success("Recovery email sent successfully");
       navigate("/verifypasswordrecovery");

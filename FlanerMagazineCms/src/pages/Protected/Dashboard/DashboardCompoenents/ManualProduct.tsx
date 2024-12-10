@@ -9,7 +9,7 @@ function ManualProduct() {
   const handleSubmit = async () => {
     try {
       await axios.post(
-        `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/products/send?product_id=${prodictId}&email_to=${customerEmail}`,
+        `https://f02c-159-100-101-189.ngrok-free.app/api/v1/admin/products/send?product_id=${prodictId}&email_to=${customerEmail}`,
         {},
         { withCredentials: true }
       );

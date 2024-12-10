@@ -46,7 +46,7 @@ const UpdateUser: FC = () => {
 
     try {
       axios.patch(
-        `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/users/${Id}`,
+        `https://f02c-159-100-101-189.ngrok-free.app/api/v1/admin/users/${Id}`,
         userData,
         {
           withCredentials: true,

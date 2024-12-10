@@ -37,7 +37,7 @@ const NewPost: FC = () => {
     try {
       console.log(postData);
       await axios.post(
-        `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/products/`,
+        `https://f02c-159-100-101-189.ngrok-free.app/api/v1/admin/products/`,
         postData,
         {
           withCredentials: true,

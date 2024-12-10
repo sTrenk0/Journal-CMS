@@ -20,7 +20,7 @@ const UsersTable = () => {
   useEffect(() => {
     axios
       .get<UserModel[]>(
-        `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/users/`,
+        `https://f02c-159-100-101-189.ngrok-free.app/api/v1/admin/users/`,
         {
           withCredentials: true,
         }
@@ -38,7 +38,7 @@ const UsersTable = () => {
       try {
         console.log("Deleting user with ID:", deleteUserId);
         await axios.delete(
-          `https://5230-159-100-101-189.ngrok-free.app/api/v1/admin/users/${deleteUserId}`,
+          `https://f02c-159-100-101-189.ngrok-free.app/api/v1/admin/users/${deleteUserId}`,
           { withCredentials: true }
         );
 

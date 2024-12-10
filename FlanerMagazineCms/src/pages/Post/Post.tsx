@@ -156,7 +156,7 @@ function Post() {
     // Fetching data from API using axios
     axios
       .get<ProductInfo>(
-        `https://5230-159-100-101-189.ngrok-free.app/api/v1/products/id/${id}/`
+        `https://f02c-159-100-101-189.ngrok-free.app/api/v1/products/id/${id}/`
       )
       .then((response) => {
         setData(response.data); // Store API data in state

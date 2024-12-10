@@ -26,7 +26,7 @@ function NewPassword() {
 
     try {
       const response = await axios.post(
-        `https://5230-159-100-101-189.ngrok-free.app/v1/auth/recovery-password`,
+        `https://f02c-159-100-101-189.ngrok-free.app/v1/auth/recovery-password`,
         data,
         {
           headers: {
