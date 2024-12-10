@@ -22,7 +22,7 @@ const LoginForm: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/auth/login`,
+        `http://localhost:8000/api/v1/auth/login`,
         data,
         {
           headers: {

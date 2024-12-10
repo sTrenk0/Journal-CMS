@@ -9,9 +9,7 @@ function ManualProduct() {
   const handleSubmit = async () => {
     try {
       await axios.post(
-        `${
-          import.meta.env.VITE_DOMAIN_NAME
-        }api/v1/admin/products/send?product_id=${prodictId}&email_to=${customerEmail}`,
+        `http://localhost:8000/api/v1/admin/products/send?product_id=${prodictId}&email_to=${customerEmail}`,
         {},
         { withCredentials: true }
       );

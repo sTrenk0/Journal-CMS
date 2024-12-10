@@ -40,9 +40,7 @@ const PaymentHistory: React.FC = () => {
 
   useEffect(() => {
     const fetchPaymentInfo = async () => {
-      const apiUrl = `${
-        import.meta.env.VITE_DOMAIN_NAME
-      }api/v1/admin/payments/`;
+      const apiUrl = `http://localhost:8000/api/v1/admin/payments/`;
       try {
         const response: AxiosResponse<PaymentInfo[]> = await axios.get(apiUrl, {
           withCredentials: true,

@@ -39,13 +39,9 @@ const CreateUser: FC = () => {
     console.log("User Data:", userData);
 
     try {
-      axios.post(
-        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/admin/users/`,
-        userData,
-        {
-          withCredentials: true,
-        }
-      );
+      axios.post(`http://localhost:8000/api/v1/admin/users/`, userData, {
+        withCredentials: true,
+      });
       toast.success("User created successfully");
     } catch (error) {
       console.log(error);

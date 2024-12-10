@@ -155,9 +155,7 @@ function Post() {
   useEffect(() => {
     // Fetching data from API using axios
     axios
-      .get<ProductInfo>(
-        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/products/id/${id}/`
-      )
+      .get<ProductInfo>(`http://localhost:8000/api/v1/products/id/${id}/`)
       .then((response) => {
         setData(response.data); // Store API data in state
         setLoading(false); // Stop loading

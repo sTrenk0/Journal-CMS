@@ -16,7 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
   const login = async () => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/auth/logout`,
+        `http://localhost:8000/api/v1/auth/logout`,
         {},
         {
           withCredentials: true,

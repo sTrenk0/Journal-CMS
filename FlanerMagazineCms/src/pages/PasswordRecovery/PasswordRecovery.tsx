@@ -17,9 +17,7 @@ function PasswordRecovery() {
 
     try {
       await axios.post(
-        `${
-          import.meta.env.VITE_DOMAIN_NAME
-        }/api/v1/auth/forgot-password?email=${email}`
+        `http://localhost:8000/api/v1/auth/forgot-password?email=${email}`
       );
       toast.success("Recovery email sent successfully");
       navigate("/verifypasswordrecovery");

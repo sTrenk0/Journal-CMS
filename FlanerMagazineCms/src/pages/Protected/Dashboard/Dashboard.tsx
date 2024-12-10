@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
   const checkAuthorization = async () => {
     try {
       const meUser = await axios.get(
-        `${import.meta.env.VITE_DOMAIN_NAME}api/v1/admin/users/me`,
+        `http://localhost:8000/api/v1/admin/users/me`,
         {
           withCredentials: true,
         }
