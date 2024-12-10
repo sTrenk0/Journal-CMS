@@ -1,13 +1,11 @@
 version: "3.8"
 
 services:
-  app:
+  nginx_with_app:
     build:
       context: ./FlanerMagazineCms/
       dockerfile: Dockerfile
     restart: always
-    volumes:
-      - frontend_dist_data: ./app/dist/
     network_mode: host
 
 
@@ -78,8 +76,6 @@ volumes:
   postgres_data:
     driver: local
   redis_data:
-    driver: local
-  frontend_dist_data:
     driver: local
 
 

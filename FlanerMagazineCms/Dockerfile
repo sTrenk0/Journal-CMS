@@ -7,9 +7,6 @@ WORKDIR /app
 # Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
 
-
-RUN mkdir ./dist/
-
 # Install dependencies
 RUN npm install
 
@@ -24,6 +21,8 @@ FROM nginx:1.23.4
 
 # Copy build files from the builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 80
 EXPOSE 80
