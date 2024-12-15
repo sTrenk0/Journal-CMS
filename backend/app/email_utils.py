@@ -55,7 +55,7 @@ class RecoveryPasswordEmailTemplate(EmailMessage):
     def __init__(self, email_to: str, recovery_code: int):
         super().__init__(
             email_to=email_to,
-            subject=config.project_name + "(Recovery password)",
+            subject="(Recovery password)",
             template_name="recovery_password.html",
             context={
                 "email_to": email_to,
@@ -69,7 +69,7 @@ class ProductEmailTemplate(EmailMessage):
     def __init__(self, email_to: str, source_product_url: str):
         super().__init__(
             email_to=email_to,
-            subject=config.project_name + "(Product email)",
+            subject="(Product email)",
             template_name="product_email.html",
             context={"email_to": email_to, "source_product_url": source_product_url},
         )
@@ -79,7 +79,7 @@ class InternalErrorEmailTemplate(EmailMessage):
     def __init__(self, email_to: str, traceback_log: str, dt_isoformat: str):
         super().__init__(
             email_to=email_to,
-            subject=config.project_name + "(Internal server error)",
+            subject="(Internal server error)",
             template_name="internal_error.html",
             context={
                 "email_to": email_to,

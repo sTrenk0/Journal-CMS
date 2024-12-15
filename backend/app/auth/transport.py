@@ -8,12 +8,15 @@ from app.openapi_type import OpenAPIResponseType
 from app.settings import config
 
 
+cookie_name = "token"
+
+
 class CookieTransport:
-    cookie_name: str = "token"
+    cookie_name: str = cookie_name
     scheme: APIKeyCookie = APIKeyCookie(name=cookie_name, auto_error=False)
     cookie_max_age: Optional[int] = config.app_cookie_age_seconds
     cookie_path: str = "/"
-    cookie_domain: Optional[str] = config.app_site_domain
+    cookie_domain: Optional[str] = config.app_domain_or_ip
     cookie_secure: bool = True
     cookie_httponly: bool = True
     cookie_samesite: Literal["lax", "strict", "none"] = "strict"

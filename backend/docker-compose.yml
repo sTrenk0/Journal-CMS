@@ -1,14 +1,4 @@
-version: "3.8"
-
 services:
-  nginx_with_app:
-    build:
-      context: ./FlanerMagazineCms/
-      dockerfile: Dockerfile
-    restart: always
-    network_mode: host
-
-
   postgres:
     hostname: "${POSTGRES_HOST_NAME}"
     container_name: "${POSTGRES_HOST_NAME}"
@@ -29,6 +19,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    ports:
+      - "${POSTGRES_PORT}:5432"
 
   redis:
     image: redis:latest
@@ -40,12 +32,15 @@ services:
       - "redis_data:/data"
     networks:
       - local
+    ports:
+      - "${REDIS_PORT}:6379"
+
 
   python:
     hostname: "${APP_HOST_NAME}"
     container_name: "${APP_HOST_NAME}"
     build:
-      context: ./backend/
+      context: .
       dockerfile: Dockerfile-python
     depends_on:
       postgres:

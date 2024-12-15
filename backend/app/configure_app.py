@@ -17,7 +17,9 @@ def create_configured_app() -> FastAPI:
 
     app = FastAPI(lifespan=lifespan, version=f"{config.api_version}")
     # put your localhost with your port of frontend app here
-    origins = ["http://localhost", "http://localhost:8080", "http://localhost:5173"]
+    origins = [
+        config.app_domain_or_ip,
+    ]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,

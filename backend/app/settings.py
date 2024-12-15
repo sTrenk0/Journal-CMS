@@ -10,20 +10,18 @@ class _Config(BaseSettings):
         env_ignore_empty=True,
         extra="ignore",
         case_sensitive=False,
-        env_file=".app.env",
         env_file_encoding="utf-8",
     )
     api_version: ClassVar = "v1"
     _launch_option: Literal["local", "docker"] = "docker"
-    app_site_domain: str = "Journal-CMS"
+    app_domain_or_ip: str
+    app_log_level: Literal["debug", "info", "warning", "error", "critical"]
     app_jwt_secret: str
     app_cookie_age_seconds: int
     app_initial_superuser_email: str
     app_initial_superuser_password: str
     sender_email: str
     client_email_password: str
-    app_internal_exception_timezone_view: str = "Europe/Kyiv"
-    app_is_notifiable_internal_exception: bool
     app_port: int
     postgres_port: int
     postgres_user: str

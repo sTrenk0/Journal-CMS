@@ -8,8 +8,10 @@ if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     echo "Error: This directory is not a Git repository."
     exit 1
 fi
-EXCLUDE_FILE_PATTERNS=".venv|__pycache__|migrations|build|dist|alembic|test"
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.py$" | grep -Ev "$EXCLUDE_FILE_PATTERNS")
+
+EXCLUDE_FILE_PATTERNS="(\.venv|__pycache__|migrations|build|dist|alembic|test)"
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.py$" | grep -Ev "$EXCLUDE_FILE_PATTERNS" || true)
+echo FILES
 
 if [ -z "$FILES" ]; then
     echo "No Python files to check."

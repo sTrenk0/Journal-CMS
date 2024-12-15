@@ -53,7 +53,6 @@ async def login(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=AuthError.LOGIN_BAD_CREDENTIALS,
         )
-
     token = create_access_token(user.email)
     response = transport.get_login_response(token)
     return response
